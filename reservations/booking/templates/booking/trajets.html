@@ -1,0 +1,17 @@
+<h1> trajets </h1>
+{% if trajets %}
+    <form action="{% url 'trajets' %}" method="post" class="dropdown">
+    {% csrf_token %}
+    {{ form }}
+    <br>
+    </br>
+    <input type="submit" value="Search">
+    </form>
+    <ul>
+    {% for trajet in trajets%}
+        <li> {{ trajet }} ,  Date départ :   {{trajet.date_depart}} </li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>pas de trajet disponible.</p>
+{% endif %}

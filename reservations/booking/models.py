@@ -1,5 +1,9 @@
 from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
+from django.core.validators import MinValueValidator
+import datetime
+from django.core.exceptions import ValidationError
+
 
 
 '''
@@ -30,6 +34,12 @@ class Trajet(models.Model):
     gare_arrivee = models.ForeignKey(Gare, on_delete=models.CASCADE, related_name='gare_arrivee')
     date_depart = models.DateTimeField()
     date_arrivee = models.DateTimeField()
+    
+    ## ne fonctionne pas pour l'instant
+    if date_arrivee < date_depart:
+        raise ValidationError("La date d'arrivée doit être supérieure à la date de départ")
+    ###
+    
     
     def __str__(self):
         return self.gare_depart.nom + ' - ' + self.gare_arrivee.nom

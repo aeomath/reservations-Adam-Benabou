@@ -2,12 +2,14 @@ from django.shortcuts import get_list_or_404, get_object_or_404, render
 from django.http import HttpResponse
 from .models import Trajet, Gare
 from booking.form import SearchForm
+from django.contrib.auth.decorators import login_required
 
 
 from django.shortcuts import render
 
 from .models import Trajet
 
+@login_required(login_url='/booking/accounts/login')
 def trajets(request):
     template = "booking/trajets.html"
     trajets = Trajet.objects.all()

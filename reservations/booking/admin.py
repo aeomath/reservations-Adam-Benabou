@@ -1,7 +1,13 @@
 from django.contrib import admin
-from .models import Gare, Trajet
+from .models import Gare, Trajet , Client, Passager
 
 
+class ClientAdmin(admin.ModelAdmin):
+    list_display = ('__str__','telephone', 'adresse', 'user')
+    search_fields = ('user__first_name', 'user__last_name','user')
+    fieldsets = (
+        (None, { 'fields': [ 'prénom', 'nom','user', 'telephone', 'adresse']}),
+    )
 
 class TrajetAdmin(admin.ModelAdmin):
     list_display = ('__str__','date_depart', 'date_arrivee')
@@ -17,6 +23,17 @@ class GareAdmin(admin.ModelAdmin):
     list_filter = ('ville',)
     search_fields = ('nom', 'ville')
     list_display = ('nom', 'ville')
+    
+class PassagerAdmin(admin.ModelAdmin):
+    list_display = ('__str__','date_naissance')
+    search_fields = ('nom', 'prenom')
+    fieldsets = (
+        (None, { 'fields': ['nom', 'prenom']}),
+        ("Information supplémentaire", {'fields': ['date_naissance']}),
+    )
+
 # Register your models here.
+admin.site.register(Client, ClientAdmin)
 admin.site.register(Gare, GareAdmin)
 admin.site.register(Trajet, TrajetAdmin)
+admin.site.register(Passager, PassagerAdmin)

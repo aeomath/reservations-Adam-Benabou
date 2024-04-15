@@ -14,18 +14,18 @@
 
 {% if form.errors %}
 <div class="alert alert-danger" role="alert">
-    Your username and password didn't match. Please try again.
+    Votre nom d'utilisateur et votre mot de passe ne correspondent pas. Veuillez réessayer.
 </div>
 {% endif %}
 
 {% if next %}
     {% if user.is_authenticated %}
     <div class="alert alert-warning" role="alert">
-        Your account doesn't have access to this page. To proceed, please login with an account that has access.
+        Votre compte n'a pas accès à cette page. Pour continuer, veuillez vous connecter avec un compte qui a accès.
     </div>
     {% else %}
     <div class="alert alert-info" role="alert">
-        Please login to see this page.
+        Merci de vous connecter pour voir cette page 
     </div>
     {% endif %}
 {% endif %}
@@ -42,6 +42,7 @@
     {{ form.password }}
 </div>
 
-<button type="submit" class="btn btn-secondary">Login</button>
+<button type="submit" class="btn btn-secondary">connexion</button>
 <input type="hidden" name="next" value="{{ next }}">
 </form>
+<p><a href="{% url 'password_reset'%}" >Mot de passe oublié </a></p>

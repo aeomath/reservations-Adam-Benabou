@@ -18,7 +18,7 @@
 
 <div class="container">
     <div class="text-right">
-        <h3>Bienvenue {{ user.username }}</h3>
+        <h3>Bienvenue {{ user.client.prenom }} {{user.client.nom}}</h3>
         <a href="{% url 'logout' %}" class="btn btn-secondary">Se déconnecter</a>
 
        <a href="{% url 'password_change' %}" class="btn btn-secondary">Changer le mot de passe</a>

@@ -6,7 +6,7 @@ class ClientAdmin(admin.ModelAdmin):
     list_display = ('__str__','telephone', 'adresse', 'user')
     search_fields = ('user__first_name', 'user__last_name','user')
     fieldsets = (
-        (None, { 'fields': [ 'prénom', 'nom','user', 'telephone', 'adresse']}),
+        (None, { 'fields': [ 'prenom', 'nom','user', 'telephone', 'adresse']}),
     )
 
 class TrajetAdmin(admin.ModelAdmin):

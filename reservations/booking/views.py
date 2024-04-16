@@ -49,6 +49,13 @@ def reservations(request):
     template = "booking/reservations.html"
     return render(request, template, {'reservations': reservations_list})
 
+@login_required(login_url='/booking/accounts/login')
+def reservation(request, reservation_id):
+    reservation = get_object_or_404(Reservation, pk=reservation_id)
+    if reservation.client != request.user.client:
+        return HttpResponse("Petit malin , vous avez essayé d'accéder à une réservation qui ne vous appartient pas !")
+    template = "booking/reservation.html"
+    return render(request, template, {'reservation': reservation})
 
 def index(request):
     return HttpResponse("Hello, world. You're at the booking index.")

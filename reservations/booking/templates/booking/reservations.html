@@ -7,7 +7,7 @@
         <table class="table">
             <thead>
                 <tr>
-                    <th>Reservation ID </th>
+                    <th> numéro reservation </th>
                     <th>Voyage</th>
                     <th>Date de départ</th>
                 </tr>
@@ -16,7 +16,7 @@
                 {% for reservation in reservations %}
                     <tr>
                         <td>{{ reservation.numero_reservation }}</td>
-                        <td>{{ reservation }}</td>
+                        <td><a href=/booking/reservations/{{reservation.numero_reservation}}>{{ reservation }}</a></td>
                         <td>{{ reservation.trajet.date_depart }}</td>
                     </tr>
                 {% endfor %}

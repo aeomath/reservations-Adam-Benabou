@@ -1,0 +1,40 @@
+{%extends 'booking/base.html'%}
+
+{% block title %} Reservation {% endblock %}
+
+{% block content %}
+    {% if reservation %}
+        <br> </br>
+        <h1>Reservation : {{reservation}}</h1>
+
+        <table class = "table">
+            <tr>
+                <th>Reservation n° </th>
+                <th>Date de reservation</th>
+                <th>passager</th>
+                <th>voiture</th>
+                <th>place</th>
+            </tr>
+            <tr>
+                <td>{{ reservation.numero_reservation }}</td>
+                <td>{{ reservation.date_reservation }}</td>
+                <td>{{ reservation.passager }}</td>
+                <td>{{ reservation.numero_voiture }}</td>
+                <td>{{ reservation.numero_place}}</td>
+            </tr>
+        </table>
+    {% else %}
+        <div class="alert alert-info" role="alert">
+            Cette reservation n'existe pas.
+        </div>
+    {% endif %}
+{% endblock %}
+
+
+date_reservation = models.DateTimeField()
+    numero_reservation = models.IntegerField(primary_key=True)
+    numero_voiture = models.IntegerField()
+    numero_place = models.IntegerField(unique=True)
+    passager = models.ForeignKey(Passager, on_delete=models.CASCADE)
+    client = models.ForeignKey(Client, on_delete=models.CASCADE)
+    trajet

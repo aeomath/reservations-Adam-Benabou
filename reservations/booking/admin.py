@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Gare, Trajet , Client, Passager
+from .models import Gare, Trajet , Client, Passager, Reservation
 
 
 class ClientAdmin(admin.ModelAdmin):
@@ -31,9 +31,19 @@ class PassagerAdmin(admin.ModelAdmin):
         (None, { 'fields': ['nom', 'prenom']}),
         ("Information supplémentaire", {'fields': ['date_naissance']}),
     )
+    
+class ReservationAdmin(admin.ModelAdmin):
+    list_display = ('__str__','date_reservation', 'numero_reservation', 'numero_voiture', 'numero_place')
+    search_fields = ('numero_reservation', 'numero_voiture', 'numero_place')
+    list_filter = ('date_reservation', 'numero_reservation')
+    fieldsets = (
+        (None, { 'fields': ['date_reservation', 'trajet', 'numero_voiture', 'numero_place']}),
+        ("Information passager et client", {'fields': ['passager', 'client']}),
+    )
 
 # Register your models here.
 admin.site.register(Client, ClientAdmin)
 admin.site.register(Gare, GareAdmin)
 admin.site.register(Trajet, TrajetAdmin)
 admin.site.register(Passager, PassagerAdmin)
+admin.site.register(Reservation, ReservationAdmin)

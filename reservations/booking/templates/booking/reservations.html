@@ -1,0 +1,31 @@
+{% extends "booking/trajets.html" %}
+{% block title %} Reservations {% endblock %}
+
+{% block content %}
+    <h1>Mes Reservations</h1>
+    {% if reservations %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Reservation ID </th>
+                    <th>Voyage</th>
+                    <th>Date de départ</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for reservation in reservations %}
+                    <tr>
+                        <td>{{ reservation.numero_reservation }}</td>
+                        <td>{{ reservation }}</td>
+                        <td>{{ reservation.trajet.date_depart }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <div class="alert alert-info" role="alert">
+            Vous n'avez pas de réservation à votre nom.
+        </div>
+    {% endif %}
+{% endblock %}
+

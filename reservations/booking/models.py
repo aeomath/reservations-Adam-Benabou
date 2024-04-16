@@ -44,16 +44,17 @@ class Trajet(models.Model):
         return self.gare_depart.nom + ' - ' + self.gare_arrivee.nom
     
     
-'''
 class Reservation(models.Model):
     date_reservation = models.DateTimeField()
-    numero_reservation = models.IntegerField()
+    numero_reservation = models.IntegerField(primary_key=True)
     numero_voiture = models.IntegerField()
-    numero_place = models.IntegerField()
+    numero_place = models.IntegerField(unique=True)
     passager = models.ForeignKey(Passager, on_delete=models.CASCADE)
     client = models.ForeignKey(Client, on_delete=models.CASCADE)
     trajet = models.ForeignKey(Trajet, on_delete=models.CASCADE)
-'''
+
+    def __str__(self):
+        return str(self.trajet)
 
     
     

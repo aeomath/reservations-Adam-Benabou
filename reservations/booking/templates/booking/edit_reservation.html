@@ -1,0 +1,22 @@
+{%extends 'booking/base.html'%}
+
+{% block title %} Reservation {% endblock %}
+
+{% block content %}
+
+    <h1>Creer une reservation</h1>
+
+    <form action="{% url 'nouvelle_reservation' %}" method="post">
+        {% csrf_token %}
+        <p> trajet {{ form.trajet}}</p>
+        <p> numero de voiture {{ form.numero_voiture}}</p>
+        <p> numero de place {{ form.numero_place}}</p>
+        <p> passager {{ form.passager}}</p>
+        
+        <h2>Creation Passager</h2>
+        {{passager_form.as_p}}
+        
+        <button type="submit" class="btn btn-primary">Enregistrer</button>
+    </form>
+
+{% endblock %}

@@ -12,14 +12,17 @@
         <table class = "table">
             <thead>
                 <tr>
-                    <th> Trajet </th>
+                    <th> gare de depart </th>
+                    <th> gare d'arrivée </th>
                     <th> Date départ </th>
+
                 </tr>
             </thead>
             <tbody>
                 {% for trajet in trajets %}
                     <tr>
-                        <td> {{ trajet }} </td>
+                        <td> {{ trajet.gare_depart }} </td>
+                        <td> {{ trajet.gare_arrivee }} </td>
                         <td> {{ trajet.date_depart }} </td>
                     </tr>
                 {% endfor %}

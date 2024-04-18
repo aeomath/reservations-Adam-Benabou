@@ -1,0 +1,22 @@
+{% extends 'booking/base.html'%}
+
+{% block title %} Supprimer une réservation {% endblock %}
+
+{% block content %}
+
+    <h1 class="alert alert-warning" role="alert" >Vous allez supprimer votre suppresion </h1>
+
+    {% if reservation %}
+        <form action="{% url 'supprimer_reservation' reservation.numero_reservation %}" method="post">
+            {% csrf_token %}
+            <p> Etes-vous sûr de vouloir supprimer la réservation {{ reservation }} ? , cette action est irreversible</p>
+            <p> Vous ne serez pas remboursé </p>
+            <button type="submit" class="btn btn-danger btn-lg btn-block">Supprimer</button>
+        </form>
+    {% else %}
+        <div class="alert alert-info" role="alert">
+            Cette réservation n'existe pas.
+        </div>
+    {% endif %}
+    
+{% endblock %}

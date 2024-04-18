@@ -6,7 +6,7 @@
 <a href="{% url 'reservations' %}" class="btn btn-secondary">Retour à mes reservations</a>
     {% if reservation %}
         <br> </br>
-        <h1>Reservation : {{reservation}}</h1>
+        <h2>{{reservation}}</h2>
 
         <table class = "table">
             <tr>
@@ -24,9 +24,8 @@
                 <td>{{ reservation.numero_place}}</td>
             </tr>
             <tr>
-                <td>
-                    <a href="{% url 'modifier_reservation' reservation.numero_reservation %}" class="btn btn-primary btn-lg btn-block">Modifier</a>
-                </td>
+                <td> <a href="{% url 'modifier_reservation' reservation.numero_reservation %}" class="btn btn-primary btn-lg btn-block">Modifier</a></td>
+                <td> <a href="{% url 'supprimer_reservation' reservation.numero_reservation %}" class="btn btn-danger btn-lg btn-block">Supprimer</a></td>
             </tr>
         </table>
     {% else %}

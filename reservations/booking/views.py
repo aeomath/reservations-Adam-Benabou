@@ -59,12 +59,14 @@ def reservation(request, reservation_id):
 def edit_reservation(request, reservation_id=None):     
     ##Modification d'une réservation existante   
     if reservation_id:
+        if request.user.client != get_object_or_404(Reservation, pk=reservation_id).client:
+            return HttpResponse("Petit malin , vous avez essayé de modifier une réservation qui ne vous appartient pas !")
         reservation = get_object_or_404(Reservation, pk=reservation_id)
         if request.method == 'POST':
             form = ReservationForm(request.POST, instance=reservation)
             if form.is_valid():
                 reservation = form.save()
-                return HttpResponseRedirect(reverse('reservation' , args=(reservation.pk, )))
+                return redirect('reservation',reservation_id=reservation.pk)
         else:
             form = ReservationForm(instance=reservation)
         template = "booking/edit_reservation.html"
@@ -80,14 +82,23 @@ def edit_reservation(request, reservation_id=None):
                 reservation.date_reservation = timezone.now()   
                 reservation.save()
                 form.save_m2m()
-                return HttpResponseRedirect(reverse('reservation' , args=(reservation.pk,)))
+                return redirect('reservation',reservation_id=reservation.pk)
         else:
             form = ReservationForm()
 
     template = "booking/edit_reservation.html"
     return render(request, template, {'form': form})
 
-
+def delete_reservation(request, reservation_id):
+    reservation = get_object_or_404(Reservation, pk=reservation_id)
+    if reservation.client != request.user.client:
+        return HttpResponse("Petit malin , vous avez essayé de supprimer une réservation qui ne vous appartient pas !")
+    if request.method == 'POST':
+        reservation.delete()
+        return redirect('reservations')
+    template = "booking/delete_reservation.html"
+    return render(request, template, {'reservation': reservation})
+    
 def index(request):
     return HttpResponse("Hello, world. You're at the booking index.")
 

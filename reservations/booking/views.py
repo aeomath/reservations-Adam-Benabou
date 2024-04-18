@@ -99,7 +99,15 @@ def delete_reservation(request, reservation_id):
     template = "booking/delete_reservation.html"
     return render(request, template, {'reservation': reservation})
     
-def index(request):
-    return HttpResponse("Hello, world. You're at the booking index.")
+def menu(request):
+    template = "booking/menu.html"
+    if request.user.is_authenticated:
+        context = {
+            'user': request.user,
+        }
+    else:
+        context = {}
+    return render(request, template,context)
+
 
 

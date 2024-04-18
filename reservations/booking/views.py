@@ -1,11 +1,13 @@
 from django.shortcuts import get_list_or_404, get_object_or_404, render, redirect
-from django.http import HttpResponse, HttpResponseRedirect
-from .models import Trajet,Gare,Client,Passager,Reservation
-from booking.form import SearchForm , PassagerForm, ReservationForm
+from django.http import HttpResponse
+from .models import Trajet,Reservation
+from booking.form import SearchForm , ReservationForm, Register_Client
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+from django.contrib.auth import login
 from django.utils import timezone
-import time 
-from django.urls import reverse
+
+
 
 from .models import Trajet
 
@@ -105,5 +107,22 @@ def menu(request):
         return render(request, 'booking/menu_auth.html', context)
     return render(request, 'booking/menu_pas_auth.html')
 
+def register(request):
+    if request.method == 'POST':
+        form = Register_Client(request.POST)
+        if form.is_valid():
+            client = form.save(commit=False)
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
+            prenom = form.cleaned_data['prenom']
+            nom = form.cleaned_data['nom']
+            new_user = User.objects.create_user(username=username, password=password, first_name=prenom, last_name=nom)
+            client.user = new_user
+            client.save()
+            login(request, new_user)
+            return redirect('menu')
+    else:
+        form = Register_Client()
+    return render(request, 'booking/register.html', {'form': form})
 
 

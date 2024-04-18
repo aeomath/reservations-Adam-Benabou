@@ -1,0 +1,45 @@
+{%extends "booking/menu_pas_auth.html"%}
+{%block title%}Inscription{%endblock%}
+{%block en_tete%}{%endblock%}
+{%block content%}
+
+<h1>Creer votre compte client</h1>
+<div class="container">
+    <div class="row justify-content-left">
+        <div class="col-md-6">
+            <form action="{% url 'register' %}" method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="username">Nom utilisateur</label>
+                    {{ form.username }}
+                </div>
+                <div class="form-group">
+                    <label for="password">Mot de passe</label>
+                    {{ form.password }}
+                </div>
+                <br> </br>
+                <h2>Informations personnellle :</h2>
+                <br> </br>
+                <div class="form-group">
+                    <label for="prenom">Prénom</label>
+                    {{ form.prenom }}
+                </div>
+                <div class="form-group">
+                    <label for="nom">Nom</label>
+                    {{ form.nom }}
+                </div>
+                <div class="form-group">
+                    <label for="telephone">Téléphone</label>
+                    {{ form.telephone }}
+                </div>
+                <div class="form-group">
+                    <label for="adresse">Adresse</label>
+                    {{ form.adresse }}
+                </div>
+                <button type="submit" class="btn btn-success">Créer mon compte</button>
+            </form>
+        </div>
+    </div>
+</div>
+    
+{%endblock%}

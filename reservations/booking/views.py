@@ -9,7 +9,7 @@ from django.urls import reverse
 
 from .models import Trajet
 
-@login_required(login_url='/booking/accounts/login')
+
 def trajets(request):
     template = "booking/trajets.html"
     trajets = Trajet.objects.all()
@@ -28,12 +28,10 @@ def trajets(request):
     else:
         trajets = get_list_or_404(Trajet)
         form = SearchForm()
-
-    context = {
-        'form': form,
-        'trajets': trajets,
-    }
-
+        context = {
+            'form': form,
+            'trajets': trajets,
+        }
     return render(request, template, context)
 
 @login_required(login_url='/booking/accounts/login')

@@ -1,9 +1,10 @@
-{% extends 'booking/base.html' %}
+
+{% extends user.is_authenticated|yesno:"booking/menu_auth.html,booking/menu_pas_auth.html" %}
 {%block title %} Trajets {%endblock%}
 
+{%block en_tete%} {%endblock%}
 {% block content %}
     <h1>Trajets disponible</h1>
-    <a href="{% url 'menu' %}" class="btn btn-secondary">Retour au menu</a>
     {% if trajets %}
         <form action="{% url 'trajets' %}" method="post" class="dropdown">
             {% csrf_token %}

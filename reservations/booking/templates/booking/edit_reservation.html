@@ -1,4 +1,5 @@
-{%extends 'booking/base.html'%}
+{% extends "booking/menu_auth.html" %}
+{% block en_tete%} {% endblock %}
 
 {% block title %} {% if reservation_id %}Modifier{% else %}Créer{% endif %} une réservation {% endblock %}
 

@@ -50,7 +50,7 @@ class Trajet(models.Model):
     
 class Reservation(models.Model):
     date_reservation = models.DateTimeField()
-    numero_reservation = models.IntegerField(primary_key=True)
+    numero_reservation = models.AutoField(primary_key=True)
     numero_voiture = models.IntegerField()
     numero_place = models.IntegerField()
     passager = models.ForeignKey(Passager, on_delete=models.CASCADE)

@@ -7,7 +7,7 @@ class SearchForm(forms.Form):
     gare_depart = forms.ModelChoiceField(queryset=Gare.objects.all(), required=False)
     gare_arrivee = forms.ModelChoiceField(queryset=Gare.objects.all(), required=False)
     
-    
+## Pas utiliser pour l'instant  
 class PassagerForm(forms.ModelForm):
     class Meta:
         model = Passager

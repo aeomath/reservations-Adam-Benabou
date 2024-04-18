@@ -1,21 +1,23 @@
 {%extends 'booking/base.html'%}
 
-{% block title %} Reservation {% endblock %}
+{% block title %} {% if reservation_id %}Modifier{% else %}Créer{% endif %} une réservation {% endblock %}
+
 
 {% block content %}
 
-    <h1>Creer une reservation</h1>
+    <h1>{% if reservation_id %}Modifier{% else %}Créer{% endif %} une réservation</h1>
 
-    <form action="{% url 'nouvelle_reservation' %}" method="post">
+    {% if reservation_id %}
+        <form action="{% url 'modifier_reservation' reservation_id%}" method="post">
+    {% else %}
+        <form action="{% url 'nouvelle_reservation' %}" method="post">
+    {% endif %}
         {% csrf_token %}
         <p> trajet {{ form.trajet}}</p>
         <p> numero de voiture {{ form.numero_voiture}}</p>
         <p> numero de place {{ form.numero_place}}</p>
         <p> passager {{ form.passager}}</p>
-        
-        <h2>Creation Passager</h2>
-        {{passager_form.as_p}}
-        
+
         <button type="submit" class="btn btn-primary">Enregistrer</button>
     </form>
 

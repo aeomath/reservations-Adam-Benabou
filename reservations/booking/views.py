@@ -1,9 +1,11 @@
-from django.shortcuts import get_list_or_404, get_object_or_404, render,redirect
-from django.http import HttpResponse
+from django.shortcuts import get_list_or_404, get_object_or_404, render, redirect
+from django.http import HttpResponse, HttpResponseRedirect
 from .models import Trajet,Gare,Client,Passager,Reservation
 from booking.form import SearchForm , PassagerForm, ReservationForm
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
+import time 
+from django.urls import reverse
 
 from .models import Trajet
 
@@ -53,26 +55,38 @@ def reservation(request, reservation_id):
     template = "booking/reservation.html"
     return render(request, template, {'reservation': reservation})
 
-## saisie d'une réservation
 @login_required(login_url='/booking/accounts/login')
-def edit_reservation(request):
-    if request.method == 'GET':
-        form = ReservationForm()
-        passager_form = PassagerForm()
-    elif request.method == 'POST':
-        form = ReservationForm(request.POST)
-        passager_form = PassagerForm(request.POST)
-        if form.is_valid() and passager_form.is_valid():
-            ## n'enregistre pas encore la réservation
-            reservation=form.save(commit=False)
-            reservation.client = request.user.client
-            reservation.passager = passager_form.save()
-            reservation.date_reservation = timezone.now()    
-            ## enregistre la réservation
-            reservation.save()
-            return redirect('reservations')
+def edit_reservation(request, reservation_id=None):     
+    ##Modification d'une réservation existante   
+    if reservation_id:
+        reservation = get_object_or_404(Reservation, pk=reservation_id)
+        if request.method == 'POST':
+            form = ReservationForm(request.POST, instance=reservation)
+            if form.is_valid():
+                reservation = form.save()
+                return HttpResponseRedirect(reverse('reservation' , args=(reservation.pk, )))
+        else:
+            form = ReservationForm(instance=reservation)
+        template = "booking/edit_reservation.html"
+        return render(request, template, {'form': form, 'reservation_id': reservation_id})
+    
+    ##Création d'une nouvelle réservation
+    else:
+        if request.method == 'POST':
+            form = ReservationForm(request.POST)
+            if form.is_valid():
+                reservation = form.save(commit=False)
+                reservation.client = request.user.client
+                reservation.date_reservation = timezone.now()   
+                reservation.save()
+                form.save_m2m()
+                return HttpResponseRedirect(reverse('reservation' , args=(reservation.pk,)))
+        else:
+            form = ReservationForm()
+
     template = "booking/edit_reservation.html"
-    return render(request, template, {'form': form , 'passager_form': passager_form})
+    return render(request, template, {'form': form})
+
 
 def index(request):
     return HttpResponse("Hello, world. You're at the booking index.")

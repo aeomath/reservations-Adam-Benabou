@@ -3,6 +3,7 @@
 {% block title %} Reservation {% endblock %}
 
 {% block content %}
+<a href="{% url 'reservations' %}" class="btn btn-secondary">Retour à mes reservations</a>
     {% if reservation %}
         <br> </br>
         <h1>Reservation : {{reservation}}</h1>
@@ -21,6 +22,11 @@
                 <td>{{ reservation.passager }}</td>
                 <td>{{ reservation.numero_voiture }}</td>
                 <td>{{ reservation.numero_place}}</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="{% url 'modifier_reservation' reservation.numero_reservation %}" class="btn btn-primary btn-lg btn-block">Modifier</a>
+                </td>
             </tr>
         </table>
     {% else %}

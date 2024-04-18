@@ -18,6 +18,7 @@
                         <td>{{ reservation.numero_reservation }}</td>
                         <td><a href=/booking/reservations/{{reservation.numero_reservation}}>{{ reservation }}</a></td>
                         <td>{{ reservation.trajet.date_depart }}</td>
+                        <td> <a href="{% url 'modifier_reservation' reservation.numero_reservation %}" class="btn btn-primary btn-sm">Modifier</a></td>
                     </tr>
                 {% endfor %}
             </tbody>

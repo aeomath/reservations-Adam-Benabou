@@ -5,20 +5,36 @@
 
 
 {% block content %}
+<div class="container">
+    <div class="row justify-content-left">
+        <div class="col-md-6">
+            <h1>{% if reservation_id %}Modifier{% else %}Créer{% endif %} une réservation</h1>
 
-    <h1>{% if reservation_id %}Modifier{% else %}Créer{% endif %} une réservation</h1>
-
-    {% if reservation_id %}
-        <form action="{% url 'modifier_reservation' reservation_id%}" method="post">
-    {% else %}
-        <form action="{% url 'nouvelle_reservation' %}" method="post">
-    {% endif %}
-        {% csrf_token %}
-        <p> trajet {{ form.trajet}}</p>
-        <p> numero de voiture {{ form.numero_voiture}}</p>
-        <p> numero de place {{ form.numero_place}}</p>
-        <p> passager {{ form.passager}}</p>
-        <button type="submit" class="btn btn-primary">Enregistrer</button>
-    </form>
-
+            {% if reservation_id %}
+                <form action="{% url 'modifier_reservation' reservation_id%}" method="post">
+            {% else %}
+                <form action="{% url 'nouvelle_reservation' %}" method="post">
+            {% endif %}
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="trajet">Trajet</label>
+                    {{ form.trajet }}
+                </div>
+                <div class="form-group">
+                    <label for="numero_voiture">Numéro de voiture</label>
+                    {{ form.numero_voiture }}
+                </div>
+                <div class="form-group">
+                    <label for="numero_place">Numéro de place</label>
+                    {{ form.numero_place }}
+                </div>
+                <div class="form-group">
+                    <label for="passager">Passager</label>
+                    {{ form.passager }}
+                </div>
+                <button type="submit" class="btn btn-primary">Enregistrer</button>
+            </form>
+        </div>
+    </div>
+</div>
 {% endblock %}

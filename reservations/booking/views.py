@@ -100,14 +100,12 @@ def delete_reservation(request, reservation_id):
     return render(request, template, {'reservation': reservation})
     
 def menu(request):
-    template = "booking/menu.html"
     if request.user.is_authenticated:
         context = {
             'user': request.user,
         }
-    else:
-        context = {}
-    return render(request, template,context)
+        return render(request, 'booking/menu_auth.html', context)
+    return render(request, 'booking/menu_pas_auth.html')
 
 
 

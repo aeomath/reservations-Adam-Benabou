@@ -3,6 +3,7 @@
 
 {% block content %}
     <h1>Trajets disponible</h1>
+    <a href="{% url 'menu' %}" class="btn btn-secondary">Retour au menu</a>
     {% if trajets %}
         <form action="{% url 'trajets' %}" method="post" class="dropdown">
             {% csrf_token %}

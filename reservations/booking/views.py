@@ -28,10 +28,10 @@ def trajets(request):
     else:
         trajets = get_list_or_404(Trajet)
         form = SearchForm()
-        context = {
-            'form': form,
-            'trajets': trajets,
-        }
+    context = {
+        'form': form,
+        'trajets': trajets,
+    }
     return render(request, template, context)
 
 @login_required(login_url='/booking/accounts/login')

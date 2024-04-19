@@ -31,7 +31,9 @@
     </div>
     {% endif %}
 {% endif %}
-<a href='/booking/menu' class="btn btn-link">Retour au menu</a>
+<a href='/booking/menu' class="btn btn-link">
+    <button type="button" class="btn btn-dark">Retour au menu</button>
+</a>
 <h1 class ="d-flex justify-content-center align-items-start" >Veuillez vous connecter</h1>
 <div class="d-flex justify-content-center align-items-start vh-100 mt-5">
     <form method="post" action="{% url 'login' %}">
@@ -44,10 +46,10 @@
             <label for="{{ form.password.id_for_label }}">{{ form.password.label }}</label>
             {{ form.password }}
         </div>
-        <div class="d-flex justify-content-between">
-            <button type="submit" class="btn btn-secondary">connexion</button>
-            <a href="{% url 'password_reset'%}" class="btn btn-link">Mot de passe oublié</a>
-        </div>
+        <button type="submit" class="btn btn-success">connexion</button>
+        <a href="{% url 'password_reset'%}" class="btn btn-link">
+            <button type="button" class="btn btn-dark">Mot de passe oublié ?</button>
+        </a>
         <input type="hidden" name="next" value="{{ next }}">
     </form>
     

@@ -125,4 +125,9 @@ def register(request):
         form = Register_Client()
     return render(request, 'booking/register.html', {'form': form})
 
+@login_required(login_url='/booking/accounts/login')
+def profil(request):
+    template = "booking/profil.html"
+    return render(request, template)
+
 

@@ -40,11 +40,19 @@
             <li class="nav-item active">
               <a class="nav-link" href="{% url 'trajets' %}">liste des trajets<span class="sr-only">(current)</span></a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'login' %}">  <span class="sr"> Connexion </span></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'register' %}">  <span class="sr"> Creer un compte client </span></a>
+          </ul>
+            <ul class="navbar-nav ml-auto" style="margin-right: 50px">
+                <li class="nav-item dropdown">
+                    <a class="nav-link" href="{% url 'login' %}">
+                        <button class="btn btn-warning" type="button">Connexion</button>
+                    </a>    
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link" href="{% url 'register' %}">
+                        <button class="btn btn-info" type="button">S'Inscrire</button>
+                    </a>    
+                </li>
+
           </ul>
         </div>
     </nav>

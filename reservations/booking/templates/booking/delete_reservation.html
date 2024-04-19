@@ -13,6 +13,7 @@
             <p> Etes-vous sûr de vouloir supprimer la réservation {{ reservation }} ? , cette action est irreversible</p>
             <p> Vous ne serez pas remboursé </p>
             <button type="submit" class="btn btn-danger btn-lg btn-block">Supprimer</button>
+            <a href="{% url 'reservations' %}" class="btn btn-secondary btn-lg btn-block">Annuler</a>
         </form>
     {% else %}
         <div class="alert alert-info" role="alert">

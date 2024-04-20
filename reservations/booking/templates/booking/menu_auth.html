@@ -1,7 +1,7 @@
 {% load static %}
 
 <head>
-    <link rel="stylesheet" href="{% static 'booking/style.css' %}">
+      
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
 
@@ -13,13 +13,16 @@
 
     <!-- Latest compiled JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+  
+    <link rel="stylesheet" href="{% static 'booking/style.css' %}">
 
     <title>{%block title%} Menu {%endblock%}</title>
 </head>
 
 <!-- Partie en tete du site -->
 <body>
-    <div class="container" id="en_tete">{%block en_tete%}
+    {%block en_tete%}
+    <div class="container" id="en_tete">
         <div class="row">
             <div class="col-md-12 text-center">
                 <img src="{% static 'booking/images/logo.png' %}" alt="Logo" class="img-fluid float-right" style="width: 100px;">

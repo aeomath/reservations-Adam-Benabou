@@ -26,6 +26,7 @@
                         <td> {{ trajet.gare_depart }} </td>
                         <td> {{ trajet.gare_arrivee }} </td>
                         <td> {{ trajet.date_depart }} </td>
+                        <td> <a href="{% url 'nouvelle_reservation_trajet' trajet.id %}" class="btn btn-primary">Réserver</a> </td>
                     </tr>
                 {% endfor %}
             </tbody>

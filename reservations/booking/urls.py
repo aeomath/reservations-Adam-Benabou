@@ -10,6 +10,7 @@ urlpatterns = [
     path("reservations/", views.reservations, name="reservations"),
     path("reservations/<int:reservation_id>/", views.reservation, name="reservation"),
     path("nouvelle_reservation/", views.edit_reservation, name="nouvelle_reservation"),
+    path("nouvelle_reservation/<int:trajet_id>/", views.edit_reservation, name="nouvelle_reservation_trajet"),
     path("modifier_reservation/<int:reservation_id>/", views.edit_reservation, name="modifier_reservation"),
     path("supprimer_reservation/<int:reservation_id>/", views.delete_reservation, name="supprimer_reservation"),
     path("register", views.register, name="register"),

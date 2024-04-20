@@ -57,7 +57,7 @@
                         mon profil</a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                         <!--Page de profil à creer donc href est vide -->
-                        <a class="dropdown-item" href="#" style="font-size: 20px"> {{ user.client.prenom }} {{user.client.nom}}<a>
+                        <a class="dropdown-item" href="{% url 'profil' %}" style="font-size: 20px"> {{ user.client.prenom }} {{user.client.nom}}<a>
                         <div class="dropdown-divider"></div> 
 
                         <a class="dropdown-item" href={% url 'logout' %}>se deconnecter</a>

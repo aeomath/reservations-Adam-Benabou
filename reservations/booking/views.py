@@ -56,7 +56,7 @@ def reservation(request, reservation_id):
     return render(request, template, {'reservation': reservation})
 
 @login_required(login_url='/booking/accounts/login')
-def edit_reservation(request, reservation_id=None):     
+def edit_reservation(request, reservation_id=None,trajet_id=None):     
     ##Modification d'une réservation existante   
     if reservation_id:
         if request.user.client != get_object_or_404(Reservation, pk=reservation_id).client:
@@ -78,14 +78,23 @@ def edit_reservation(request, reservation_id=None):
             form = ReservationForm(request.POST)
             if form.is_valid():
                 reservation = form.save(commit=False)
+                ## Si on choisit un trajet à reserver , et donc si un trajet est en paramètre, on l'ajoute à la réservation
+                if trajet_id:
+                    reservation.trajet = get_object_or_404(Trajet, pk=trajet_id)
                 reservation.client = request.user.client
                 reservation.date_reservation = timezone.now()   
                 reservation.save()
                 form.save_m2m()
                 return redirect('reservation',reservation_id=reservation.pk)
         else:
-            form = ReservationForm()
-
+            if trajet_id:
+                trajet = get_object_or_404(Trajet, pk=trajet_id)
+                reservation=Reservation(trajet=trajet)
+                form = ReservationForm(instance=reservation)
+            ## Si on ne choisit pas de trajet à reserver , on crée une réservation vide
+            else:
+                form = ReservationForm()
+                
     template = "booking/edit_reservation.html"
     return render(request, template, {'form': form})
 

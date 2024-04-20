@@ -5,7 +5,7 @@
 
 {% block content %}
 
-    <h1 class="alert alert-warning" role="alert" >Vous allez supprimer votre suppresion </h1>
+    <h1 class="alert alert-warning" role="alert" >Vous allez supprimer votre réservation</h1>
 
     {% if reservation %}
         <form action="{% url 'supprimer_reservation' reservation.numero_reservation %}" method="post">

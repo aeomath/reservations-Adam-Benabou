@@ -3,6 +3,12 @@
 
 {% block title %} Reservation {% endblock %}
 
+
+{% load bootstrap5 %}
+
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
 {% block content %}
 <a href="{% url 'reservations' %}" class="btn btn-secondary">Retour à mes reservations</a>
     {% if reservation %}

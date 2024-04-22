@@ -1,7 +1,19 @@
 {% extends "booking/menu_auth.html" %}
 {% block en_tete%} {% endblock %}
 
-{% block title %} {% if reservation_id %}Modifier{% else %}Créer{% endif %} une réservation {% endblock %}
+{% load bootstrap5%}
+
+{# Load the tag library #}
+{% load bootstrap5%}
+
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
+{# Display django.contrib.messages as Bootstrap alerts #}
+{% bootstrap_messages %}
+
+
+{% block title %} {%     if reservation_id %}Modifier{% else %}Créer{% endif %} une réservation {% endblock %}
 
 
 {% block content %}
@@ -15,24 +27,11 @@
             {% else %}
                 <form action="{% url 'nouvelle_reservation' %}" method="post">
             {% endif %}
+                {% bootstrap_form form %}
                 {% csrf_token %}
-                <div class="form-group">
-                    <label for="trajet">Trajet</label>
-                    {{ form.trajet }}
-                </div>
-                <div class="form-group">
-                    <label for="numero_voiture">Numéro de voiture</label>
-                    {{ form.numero_voiture }}
-                </div>
-                <div class="form-group">
-                    <label for="numero_place">Numéro de place</label>
-                    {{ form.numero_place }}
-                </div>
-                <div class="form-group">
-                    <label for="passager">Passager</label>
-                    {{ form.passager }}
-                </div>
+                {% buttons %}
                 <button type="submit" class="btn btn-primary">Enregistrer</button>
+                {% endbuttons %}
             </form>
         </div>
     </div>

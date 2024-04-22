@@ -1,15 +1,22 @@
 
 {% extends user.is_authenticated|yesno:"booking/menu_auth.html,booking/menu_pas_auth.html" %}
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% bootstrap_messages %}
 {%block title %} Trajets {%endblock%}
 
 {%block en_tete%} {%endblock%}
 {% block content %}
     <h1>Trajets disponible</h1>
     {% if trajets %}
+        
         <form action="{% url 'trajets' %}" method="post" class="dropdown">
             {% csrf_token %}
-            {{ form }}
-            <input type="submit" value="Search" class="btn btn-primary">
+            {% bootstrap_form form %}
+            {% buttons %}
+            <button type="submit" class="btn btn-primary">Rechercher</button>
+            {% endbuttons %}
         </form>
         <table class = "table">
             <thead>
@@ -32,9 +39,7 @@
             </tbody>
         </table>
     {% else %}
-        <div class="alert alert-info" role="alert">
-            Pas de trajet disponible.
-        </div>
+    {% bootstrap_alert "Pas de trajets disponible" alert_type='warning' %}
     {% endif %}
 {% endblock %}
 

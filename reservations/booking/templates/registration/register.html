@@ -3,51 +3,16 @@
 {%block en_tete%}{%endblock%}
 {%block content%}
 
+{% load bootstrap5%}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% bootstrap_messages %}
+
 <h1>Creer votre compte client</h1>
-<div class="container">
-    <div class="row justify-content-left">
-        <div class="col-md-6">
-            <h2>Informations utilisateur :</h2>
-            <br> </br>
-            <form action="{% url 'register' %}" method="post">
-                {% csrf_token %}
-                <div class="form-group">
-                    <label for="username">Nom utilisateur</label>
-                    {{ form.username }}
-                    {{form.username.errors}}
-                </div>
-                <div class="form-group">
-                    <label for="password">Mot de passe</label>
-                    {{ form.password }}
-                    {{form.password.errors}}
-                </div>
-        </div>
-        <div class="col-md-6">
-                <h2>Informations personnellle :</h2>
-                <br> </br>
-                <div class="form-group">
-                    <label for="prenom">Prénom</label>
-                    {{ form.prenom }}
-                    {{form.prenom.errors}}
-                </div>
-                <div class="form-group">
-                    <label for="nom">Nom</label>
-                    {{ form.nom }}
-                    {{form.nom.errors}}
-                </div>
-                <div class="form-group">
-                    <label for="telephone">Téléphone</label>
-                    {{ form.telephone }}
-                    {{form.telephone.errors}}
-                </div>
-                <div class="form-group">
-                    <label for="adresse">Adresse</label>
-                    {{ form.adresse }}
-                </div>
-                <button type="submit" class="btn btn-success">Créer mon compte</button>
-            </form>
-        </div>
-    </div>
-</div>
-    
+<form action="{% url 'register' %}" method="post">
+    {% csrf_token %}
+    {% bootstrap_form form %}
+    {% buttons %}
+    <button type="submit" class="btn btn-success">Créer mon compte</button>
+    {% endbuttons %}
 {%endblock%}

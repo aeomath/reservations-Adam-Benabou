@@ -132,7 +132,7 @@ def register(request):
             return redirect('menu')
     else:
         form = Register_Client()
-    return render(request, 'booking/register.html', {'form': form})
+    return render(request, 'registration/register.html', {'form': form})
 
 @login_required(login_url='/booking/accounts/login')
 def profil(request):

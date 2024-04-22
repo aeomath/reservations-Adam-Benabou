@@ -13,12 +13,13 @@
                 <h2>Informations utilisateur</h2>
                 <p> Nom d'utilisateur : {{ user.username }} </p>
                 <p> Date de création du compte : {{ user.date_joined }} </p>
+            </div>
+            <div class="col-md-6">
                 <h2>Informations client</h2>
                 <p> prenom : {{user.client.prenom}} </p>
                 <p> nom : {{user.client.nom}} </p>
                 <p> telephone : {{user.client.telephone}} </p>
-                <p> adresse : {{user.client.adresse}} </p>
-                
+                <p> adresse : {{user.client.adresse}} </p>  
             </div>
         </div>
     </div>

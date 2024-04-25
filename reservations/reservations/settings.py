@@ -129,4 +129,4 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 ##login urls
 LOGIN_REDIRECT_URL = '/booking/trajets'
-LOGOUT_REDIRECT_URL = '/booking/menu'
+LOGOUT_REDIRECT_URL = '/booking'

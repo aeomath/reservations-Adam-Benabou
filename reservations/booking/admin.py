@@ -28,7 +28,7 @@ class PassagerAdmin(admin.ModelAdmin):
     list_display = ('__str__','date_naissance')
     search_fields = ('nom', 'prenom')
     fieldsets = (
-        (None, { 'fields': ['nom', 'prenom']}),
+        (None, { 'fields': ['nom', 'prenom','client']}),
         ("Information supplémentaire", {'fields': ['date_naissance']}),
     )
     

@@ -8,14 +8,14 @@ class SearchForm(forms.Form):
     gare_depart = forms.ModelChoiceField(queryset=Gare.objects.all(), required=False)
     gare_arrivee = forms.ModelChoiceField(queryset=Gare.objects.all(), required=False)
     
-## Pas utilisé pour l'instant  
-class PassagerForm(forms.ModelForm):
-    class Meta:
-        model = Passager
-        fields = ['prenom', 'nom','date_naissance'] 
+
 
 class ReservationForm(forms.ModelForm):
-    passager = forms.ModelChoiceField(queryset=Passager.objects.all())
+    ## on surcharge la méthode __init__ pour pouvoir passer un client en paramètre et pouvoir filtrer les passagers
+    def __init__(self, client = None , **kwargs):
+        super(ReservationForm, self).__init__(**kwargs)
+        if client:
+            self.fields['passager'].queryset = Passager.objects.filter(client=client)
     class Meta:
         model = Reservation
         fields = ['trajet','numero_voiture','numero_place','passager']

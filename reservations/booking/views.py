@@ -63,7 +63,7 @@ def edit_reservation(request, reservation_id=None,trajet_id=None):
             return HttpResponse("Petit malin , vous avez essayé de modifier une réservation qui ne vous appartient pas !")
         reservation = get_object_or_404(Reservation, pk=reservation_id)
         if request.method == 'POST':
-            form = ReservationForm(request.POST, instance=reservation)
+            form = ReservationForm(data = request.POST, instance=reservation)
             if form.is_valid():
                 reservation = form.save()
                 return redirect('reservation',reservation_id=reservation.pk)
@@ -75,7 +75,7 @@ def edit_reservation(request, reservation_id=None,trajet_id=None):
     ##Création d'une nouvelle réservation
     else:
         if request.method == 'POST':
-            form = ReservationForm(request.POST)
+            form = ReservationForm(data = request.POST,client = request.user.client)
             if form.is_valid():
                 reservation = form.save(commit=False)
                 ## Si on choisit un trajet à reserver , et donc si un trajet est en paramètre, on l'ajoute à la réservation
@@ -90,10 +90,10 @@ def edit_reservation(request, reservation_id=None,trajet_id=None):
             if trajet_id:
                 trajet = get_object_or_404(Trajet, pk=trajet_id)
                 reservation=Reservation(trajet=trajet)
-                form = ReservationForm(instance=reservation)
+                form = ReservationForm(instance=reservation,client = request.user.client)
             ## Si on ne choisit pas de trajet à reserver , on crée une réservation vide
             else:
-                form = ReservationForm()
+                form = ReservationForm(client = request.user.client)
                 
     template = "booking/edit_reservation.html"
     return render(request, template, {'form': form})

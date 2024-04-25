@@ -20,6 +20,7 @@ class Passager(models.Model):
     prenom = models.CharField(max_length=255)
     nom = models.CharField(max_length=255)
     date_naissance = models.DateField()
+    client = models.ForeignKey(Client, on_delete=models.CASCADE,null=True)
     def __str__(self):
         return self.prenom + ' ' + self.nom
 

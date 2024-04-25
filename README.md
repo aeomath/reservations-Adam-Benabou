@@ -10,7 +10,7 @@ http://localhost:8000/booking/menu
 ### 2. Contenu de l'application ##
 
 * Menu principal de navigation [booking/](http://localhost:8000/booking/)
-* Liste des trajets [booking/](http://localhost:8000/booking/trajets)
+* Liste des trajets [booking/trajets](http://localhost:8000/booking/trajets)
 * Interface de connection [booking/accounts/login](http://localhost:8000/booking/account/login)
 * Page profil [booking/profil](http://localhost:8000/booking/profil)
 * Liste des réservations [booking/reservations](http://localhost:8000/booking/reservations)

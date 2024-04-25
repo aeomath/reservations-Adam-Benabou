@@ -1,0 +1,271 @@
+[
+    {
+        "model": "booking.passager",
+        "pk": 1,
+        "fields": {
+            "prenom": "Pory",
+            "nom": "Cristinne",
+            "date_naissance": "2000-11-22",
+            "client": 8
+        }
+    },
+    {
+        "model": "booking.passager",
+        "pk": 2,
+        "fields": {
+            "prenom": "Theo",
+            "nom": "Platini",
+            "date_naissance": "2024-04-25",
+            "client": 9
+        }
+    },
+    {
+        "model": "booking.passager",
+        "pk": 3,
+        "fields": {
+            "prenom": "Jen",
+            "nom": "Kevin",
+            "date_naissance": "1978-09-15",
+            "client": 8
+        }
+    },
+    {
+        "model": "booking.passager",
+        "pk": 4,
+        "fields": {
+            "prenom": "Alexandre",
+            "nom": "Alexandra",
+            "date_naissance": "2024-04-25",
+            "client": 10
+        }
+    },
+    {
+        "model": "booking.passager",
+        "pk": 5,
+        "fields": {
+            "prenom": "jobbs",
+            "nom": "Steve",
+            "date_naissance": "2004-04-08",
+            "client": 10
+        }
+    },
+    {
+        "model": "booking.gare",
+        "pk": 1,
+        "fields": {
+            "nom": "Gare Lyon Perrache",
+            "ville": "Lyon"
+        }
+    },
+    {
+        "model": "booking.gare",
+        "pk": 2,
+        "fields": {
+            "nom": "Paris Montparnasse",
+            "ville": "Paris"
+        }
+    },
+    {
+        "model": "booking.gare",
+        "pk": 3,
+        "fields": {
+            "nom": "Toulouse Matabiau",
+            "ville": "TOULOUSE"
+        }
+    },
+    {
+        "model": "booking.gare",
+        "pk": 4,
+        "fields": {
+            "nom": "Gare de l'est",
+            "ville": "Paris"
+        }
+    },
+    {
+        "model": "booking.gare",
+        "pk": 5,
+        "fields": {
+            "nom": "Gare de Gaillac",
+            "ville": "Gaillac"
+        }
+    },
+    {
+        "model": "booking.gare",
+        "pk": 6,
+        "fields": {
+            "nom": "Marseille-Saint-Charles",
+            "ville": "Marseille"
+        }
+    },
+    {
+        "model": "booking.trajet",
+        "pk": 1,
+        "fields": {
+            "gare_depart": 1,
+            "gare_arrivee": 6,
+            "date_depart": "2024-06-05T04:00:00Z",
+            "date_arrivee": "2024-06-05T10:32:00Z"
+        }
+    },
+    {
+        "model": "booking.trajet",
+        "pk": 2,
+        "fields": {
+            "gare_depart": 2,
+            "gare_arrivee": 3,
+            "date_depart": "2024-04-27T15:13:20Z",
+            "date_arrivee": "2024-04-27T21:08:00Z"
+        }
+    },
+    {
+        "model": "booking.trajet",
+        "pk": 3,
+        "fields": {
+            "gare_depart": 4,
+            "gare_arrivee": 6,
+            "date_depart": "2024-08-20T10:49:10Z",
+            "date_arrivee": "2024-08-20T14:49:23Z"
+        }
+    },
+    {
+        "model": "booking.reservation",
+        "pk": 54,
+        "fields": {
+            "date_reservation": "2024-04-25T09:28:20.896Z",
+            "numero_voiture": 1,
+            "numero_place": 11,
+            "passager": 1,
+            "client": 8,
+            "trajet": 2
+        }
+    },
+    {
+        "model": "booking.reservation",
+        "pk": 55,
+        "fields": {
+            "date_reservation": "2024-04-25T09:40:22.742Z",
+            "numero_voiture": 66,
+            "numero_place": 4,
+            "passager": 2,
+            "client": 9,
+            "trajet": 1
+        }
+    },
+    {
+        "model": "booking.reservation",
+        "pk": 56,
+        "fields": {
+            "date_reservation": "2024-04-25T09:59:45.805Z",
+            "numero_voiture": 2,
+            "numero_place": 1,
+            "passager": 1,
+            "client": 8,
+            "trajet": 2
+        }
+    },
+    {
+        "model": "booking.reservation",
+        "pk": 57,
+        "fields": {
+            "date_reservation": "2024-04-25T12:13:38.649Z",
+            "numero_voiture": 4,
+            "numero_place": 4,
+            "passager": 5,
+            "client": 10,
+            "trajet": 2
+        }
+    },
+    {
+        "model": "auth.user",
+        "pk": 1,
+        "fields": {
+            "password": "pbkdf2_sha256$600000$BMxSW7u4iupcGuvGKPRDOQ$RXVgr07MLLlw6M7o2I7EnoTXwJwOYQzxR/nbTPzeKNY=",
+            "last_login": "2024-04-25T12:10:07.942Z",
+            "is_superuser": true,
+            "username": "benab",
+            "first_name": "",
+            "last_name": "",
+            "email": "",
+            "is_staff": true,
+            "is_active": true,
+            "date_joined": "2024-04-17T15:03:13.899Z",
+            "groups": [],
+            "user_permissions": []
+        }
+    },
+    {
+        "model": "auth.user",
+        "pk": 9,
+        "fields": {
+            "password": "pbkdf2_sha256$600000$YJswhMLpAotnV6rgTG0LHq$faoaIdmqXnbNwcn/ibPb0u2gBp5u8Tj8uh2ZGZR60Uc=",
+            "last_login": "2024-04-25T09:40:11.439Z",
+            "is_superuser": false,
+            "username": "xxDarkFortnitexx",
+            "first_name": "Michel",
+            "last_name": "Platini",
+            "email": "",
+            "is_staff": false,
+            "is_active": true,
+            "date_joined": "2024-04-22T15:09:16.908Z",
+            "groups": [],
+            "user_permissions": []
+        }
+    },
+    {
+        "model": "auth.user",
+        "pk": 10,
+        "fields": {
+            "password": "pbkdf2_sha256$600000$yJ4SjTDLx0VW7xAatvc4Q3$N9HyQqOGQbikxLs5daOeki94OqXdhVSt/G2fzjh1fG8=",
+            "last_login": "2024-04-25T12:13:26.389Z",
+            "is_superuser": false,
+            "username": "barbie",
+            "first_name": "Alain",
+            "last_name": "Proviste",
+            "email": "",
+            "is_staff": false,
+            "is_active": true,
+            "date_joined": "2024-04-25T12:07:03.413Z",
+            "groups": [],
+            "user_permissions": []
+        }
+    },
+    {
+        "model": "booking.client",
+        "pk": 8,
+        "fields": {
+            "user": [
+                "benab"
+            ],
+            "telephone": "+33750910048",
+            "prenom": "ADAM",
+            "nom": "BENABOU",
+            "adresse": "4 Avenue Edouard Belin"
+        }
+    },
+    {
+        "model": "booking.client",
+        "pk": 9,
+        "fields": {
+            "user": [
+                "xxDarkFortnitexx"
+            ],
+            "telephone": "+33678719087",
+            "prenom": "Michel",
+            "nom": "Platini",
+            "adresse": "56 Avenue Carnot"
+        }
+    },
+    {
+        "model": "booking.client",
+        "pk": 10,
+        "fields": {
+            "user": [
+                "barbie"
+            ],
+            "telephone": "+12345678912",
+            "prenom": "Alain",
+            "nom": "Proviste",
+            "adresse": "6 rue du colonel sommeil"
+        }
+    }
+]

@@ -17,7 +17,7 @@
                 {% for reservation in reservations %}
                     <tr>
                         <td>{{ reservation.numero_reservation }}</td>
-                        <td><a href=/booking/reservations/{{reservation.numero_reservation}}>{{ reservation }}</a></td>
+                        <td><a href="{%url 'reservation' reservation.numero_reservation%}">{{ reservation }}</a></td>
                         <td>{{ reservation.trajet.date_depart }}</td>
                         <td> <a href="{% url 'modifier_reservation' reservation.numero_reservation %}" class="btn btn-primary btn-sm">Modifier</a></td>
                         <td> <a href="{% url 'supprimer_reservation' reservation.numero_reservation %}" class="btn btn-danger btn-sm">Supprimer</a></td>

@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib.auth import login
 from django.utils import timezone
+from django.urls import reverse
 
 
 
@@ -36,7 +37,7 @@ def trajets(request):
     }
     return render(request, template, context)
 
-@login_required(login_url='/booking/accounts/login')
+@login_required()
 def reservations(request):
     ## si un utlisateur n'est pas encore client , alors il n'a pas de réservation
     ## normalement , ca n'arrive pas car lorsque l'utilisateur s'inscrit , il s'inscrit en tant que client ( sauf les admins qui ne sont pas clients )
@@ -47,7 +48,7 @@ def reservations(request):
     template = "booking/reservations.html"
     return render(request, template, {'reservations': reservations_list})
 
-@login_required(login_url='/booking/accounts/login')
+@login_required()
 def reservation(request, reservation_id):
     reservation = get_object_or_404(Reservation, pk=reservation_id)
     if reservation.client != request.user.client:
@@ -55,7 +56,7 @@ def reservation(request, reservation_id):
     template = "booking/reservation.html"
     return render(request, template, {'reservation': reservation})
 
-@login_required(login_url='/booking/accounts/login')
+@login_required()
 def edit_reservation(request, reservation_id=None,trajet_id=None):     
     ##Modification d'une réservation existante   
     if reservation_id:
@@ -134,7 +135,7 @@ def register(request):
         form = Register_Client()
     return render(request, 'registration/register.html', {'form': form})
 
-@login_required(login_url='/booking/accounts/login')
+@login_required()
 def profil(request):
     template = "booking/profil.html"
     return render(request, template)

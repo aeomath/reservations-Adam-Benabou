@@ -128,5 +128,6 @@ STATICFILES_DIRS = [BASE_DIR / 'booking' / 'static']
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 ##login urls
+LOGIN_URL = '/booking/accounts/login'
 LOGIN_REDIRECT_URL = '/booking/trajets'
 LOGOUT_REDIRECT_URL = '/booking'

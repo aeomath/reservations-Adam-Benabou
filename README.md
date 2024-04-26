@@ -22,3 +22,8 @@ NB : L'affichage des pages utilise boostrap et java scripts. La plupart des fonc
 La page login.html provient majoritairement du tuto sur les logins fourni par Django (avec du boostrap pour la rendre plus stylisée )__
 
 J'ai crée deux templates de base [`menu_auth`](/reservations/booking/templates/booking/menu_auth.html) et [`menu_pas_auth`](/reservations/booking/templates/booking/menu_pas_auth.html) afin que toutes les pages du site internet ait un menu (qui diffère si l'on est connecté ou non) 
+
+NB utilsateur:  benab
+   mdp    : djangoadmin 
+
+ce profil à des passagers et des réservations déja enregistrès 

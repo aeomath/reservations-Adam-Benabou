@@ -41,12 +41,3 @@
         </div>
     {% endif %}
 {% endblock %}
-
-
-date_reservation = models.DateTimeField()
-    numero_reservation = models.IntegerField(primary_key=True)
-    numero_voiture = models.IntegerField()
-    numero_place = models.IntegerField(unique=True)
-    passager = models.ForeignKey(Passager, on_delete=models.CASCADE)
-    client = models.ForeignKey(Client, on_delete=models.CASCADE)
-    trajet

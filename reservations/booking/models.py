@@ -5,7 +5,7 @@ import datetime
 from django.core.exceptions import ValidationError
 from django.utils import timezone
 from django.contrib.auth.models import User
-
+from geoposition.fields import GeopositionField
 
 class Client(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -27,7 +27,7 @@ class Passager(models.Model):
 class Gare(models.Model):
     nom = models.CharField(max_length=255)
     ville = models.CharField(max_length=255)
-    
+    position = GeopositionField()
     def __str__(self):
         return self.nom
     
@@ -37,12 +37,14 @@ class Trajet(models.Model):
     date_depart = models.DateTimeField()
     date_arrivee = models.DateTimeField()
     
+    distance = models.IntegerField()
     ## ne fonctionne pas pour l'instant
     if date_arrivee < date_depart:
         raise ValidationError("La date d'arrivée doit être supérieure à la date de départ")
     ###
     
     
+        
     def __str__(self):
         ## La méthode strftime est utilisée pour convertir un objet datetime en une chaîne de caractères formatée.
         local_date_depart = timezone.localtime(self.date_depart)
@@ -67,5 +69,5 @@ class Reservation(models.Model):
         return str(self.trajet)
 
     
-    
+
 

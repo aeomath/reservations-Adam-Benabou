@@ -132,3 +132,5 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 LOGIN_URL = '/booking/accounts/login'
 LOGIN_REDIRECT_URL = '/booking/trajets'
 LOGOUT_REDIRECT_URL = '/booking'
+
+GEOPOSITION_BACKEND = 'leaflet'

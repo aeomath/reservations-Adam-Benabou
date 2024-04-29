@@ -10,7 +10,7 @@ class ClientAdmin(admin.ModelAdmin):
     )
 
 class TrajetAdmin(admin.ModelAdmin):
-    list_display = ('__str__','date_depart', 'date_arrivee', 'reservations_par_jour_moy')
+    list_display = ('__str__','date_depart', 'date_arrivee', 'reservations_par_jour_moy', 'nb_passagers')
     list_filter = ('gare_depart', 'gare_arrivee')
     search_fields = ('gare_depart', 'gare_arrivee')
     fieldsets = (
@@ -34,8 +34,8 @@ class PassagerAdmin(admin.ModelAdmin):
     
 class ReservationAdmin(admin.ModelAdmin):
     list_display = ('__str__','date_reservation', 'numero_reservation', 'numero_voiture', 'numero_place')
-    search_fields = ('numero_reservation', 'numero_voiture', 'numero_place')
-    list_filter = ('date_reservation', 'numero_reservation')
+    search_fields = ('numero_reservation', 'numero_voiture', 'numero_place', 'trajet__gare_depart__nom', 'trajet__gare_arrivee__nom')
+    list_filter = ('date_reservation', 'numero_reservation', 'trajet__gare_depart', 'trajet__gare_arrivee', 'trajet')
     fieldsets = (
         (None, { 'fields': ['date_reservation', 'trajet', 'numero_voiture', 'numero_place']}),
         ("Information passager et client", {'fields': ['passager', 'client']}),

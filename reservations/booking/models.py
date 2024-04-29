@@ -6,6 +6,7 @@ from django.core.exceptions import ValidationError
 from django.utils import timezone
 from django.contrib.auth.models import User
 from geoposition.fields import GeopositionField
+import math
 
 class Client(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -41,8 +42,29 @@ class Trajet(models.Model):
     ## ne fonctionne pas pour l'instant
     if date_arrivee < date_depart:
         raise ValidationError("La date d'arrivée doit être supérieure à la date de départ")
-    ###
     
+    def calculate_distance(lat1, lon1, lat2, lon2):
+        # Conversion des degrés en radians
+        lat1, lon1, lat2, lon2 = map(math.radians, [lat1, lon1, lat2, lon2])
+
+        # Rayon de la terre en kilomètres
+        R = 6371.0
+
+        # Différences
+        dlon = lon2 - lon1
+        dlat = lat2 - lat1
+
+        # Formule de Haversine
+        a = math.sin(dlat / 2)**2 + math.cos(lat1) * math.cos(lat2) * math.sin(dlon / 2)**2
+        c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
+
+        # Distance
+        distance = R * c
+
+        return distance
+
+    distance = models.IntegerField(default=calculate_distance(gare_depart.position.latitude, gare_depart.position.longitude, gare_arrivee.position.latitude, gare_arrivee.position.longitude))
+        
     
         
     def __str__(self):

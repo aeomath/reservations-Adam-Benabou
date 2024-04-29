@@ -10,7 +10,7 @@ class ClientAdmin(admin.ModelAdmin):
     )
 
 class TrajetAdmin(admin.ModelAdmin):
-    list_display = ('__str__','date_depart', 'date_arrivee')
+    list_display = ('__str__','date_depart', 'date_arrivee', 'reservations_par_jour_moy')
     list_filter = ('gare_depart', 'gare_arrivee')
     search_fields = ('gare_depart', 'gare_arrivee')
     fieldsets = (

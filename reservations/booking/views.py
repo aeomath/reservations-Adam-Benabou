@@ -1,7 +1,7 @@
 from django.shortcuts import get_list_or_404, get_object_or_404, render, redirect
 from django.http import HttpResponse
-from .models import Trajet,Reservation
-from booking.form import SearchForm , ReservationForm, Register_Client
+from .models import Trajet,Reservation,Passager
+from booking.form import SearchForm , ReservationForm, Register_Client,PassagerForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib.auth import login
@@ -41,8 +41,21 @@ def register(request):
 @login_required()
 def profil(request):
     template = "booking/profil.html"
-    return render(request, template)
+    passager = Passager.objects.filter(client=request.user.client)
+    return render(request, template, {'passagers': passager})
 
+@login_required()
+def create_passager(request):
+    if request.method == 'POST':
+        form = PassagerForm(request.POST)
+        if form.is_valid():
+            passager = form.save(commit=False)
+            passager.client = request.user.client
+            passager.save()
+            return redirect('profil')
+    else:
+        form = PassagerForm()
+    return render(request, 'booking/create_passager.html', {'form': form})
 
 def trajets(request):
     template = "booking/trajets.html"

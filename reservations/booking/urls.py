@@ -10,6 +10,7 @@ urlpatterns = [
     path("register", views.register, name="register"),
     path("register/<int:client_id>/", views.register, name="edit_profil"),
     path("profil", views.profil, name="profil"),
+    path("create_passager", views.create_passager, name="create_passager"),
     ## trajets (urls publics)
     path("trajets/", views.trajets, name="trajets"),
     ## reservations (urls privés)

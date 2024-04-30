@@ -54,7 +54,8 @@ def reservation(request, reservation_id):
     if reservation.client != request.user.client:
         return HttpResponse("Petit malin , vous avez essayé d'accéder à une réservation qui ne vous appartient pas !")
     template = "booking/reservation.html"
-    return render(request, template, {'reservation': reservation})
+    context ={'reservation': reservation, 'trajet': reservation.trajet , 'gare_depart': reservation.trajet.gare_depart, 'gare_arrivee': reservation.trajet.gare_arrivee} 
+    return render(request, template, context=context)
 
 @login_required()
 def edit_reservation(request, reservation_id=None,trajet_id=None):     

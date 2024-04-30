@@ -1,13 +1,29 @@
 {% extends "booking/menu_auth.html" %}
-{% block en_tete%} {% endblock %}
-
-{% block title %} Reservation {% endblock %}
-
-
+{% block en_tete%} 
 {% load bootstrap5 %}
 
 {% bootstrap_css %}
 {% bootstrap_javascript %}
+
+{% load static %}
+
+{% endblock %}
+
+{% block title %} Reservation {% endblock %}
+
+
+
+
+
+<!-- Inclusion de l'API Google Maps -->
+
+
+
+
+<!-- Inclusion du fichier JavaScript -->
+
+
+
 
 {% block content %}
 <a href="{% url 'reservations' %}" class="btn btn-secondary">Retour à mes reservations</a>
@@ -40,4 +56,21 @@
             Cette reservation n'existe pas.
         </div>
     {% endif %}
+
+    <script src="{% static 'booking/gmaps/reservation.js' %}"></script>
+
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC1l-MwdIRskm9NMrflRSYLyXsbysBv1vs&callback=initMap">
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var startLat = parseFloat('{{ gare_depart.position.latitude }}'.replace(',', '.'));
+        var startLng = parseFloat('{{ gare_depart.position.longitude }}'.replace(',', '.'));
+        var endLat = parseFloat('{{ gare_arrivee.position.latitude }}'.replace(',', '.'));
+        var endLng = parseFloat('{{ gare_arrivee.position.longitude }}'.replace(',', '.'));
+        initMap();
+        calculateAndDisplayRoute({lat: startLat, lng: startLng}, {lat: endLat, lng: endLng});
+    });
+</script>
+
+<div id="map" style="height: 400px; width: 100%;"></div>
 {% endblock %}

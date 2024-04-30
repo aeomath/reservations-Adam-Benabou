@@ -6,11 +6,42 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib.auth import login
 from django.utils import timezone
-from django.urls import reverse
+
+
+    
+def menu(request):
+    if request.user.is_authenticated:
+        context = {
+            'user': request.user,
+        }
+        return render(request, 'booking/menu_auth.html', context)
+    return render(request, 'booking/menu_pas_auth.html')
 
 
 
-from .models import Trajet
+
+def register(request):
+    if request.method == 'POST':
+        form = Register_Client(request.POST)
+        if form.is_valid():
+            client = form.save(commit=False)
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
+            prenom = form.cleaned_data['prenom']
+            nom = form.cleaned_data['nom']
+            new_user = User.objects.create_user(username=username, password=password, first_name=prenom, last_name=nom)
+            client.user = new_user
+            client.save()
+            login(request, new_user)
+            return redirect('menu')
+    else:
+        form = Register_Client()
+    return render(request, 'registration/register.html', {'form': form})
+
+@login_required()
+def profil(request):
+    template = "booking/profil.html"
+    return render(request, template)
 
 
 def trajets(request):
@@ -105,6 +136,7 @@ def edit_reservation(request, reservation_id=None,trajet_id=None):
     template = "booking/edit_reservation.html"
     return render(request, template, {'form': form})
 
+@login_required()
 def delete_reservation(request, reservation_id):
     reservation = get_object_or_404(Reservation, pk=reservation_id)
     if reservation.client != request.user.client:
@@ -114,36 +146,4 @@ def delete_reservation(request, reservation_id):
         return redirect('reservations')
     template = "booking/delete_reservation.html"
     return render(request, template, {'reservation': reservation})
-    
-def menu(request):
-    if request.user.is_authenticated:
-        context = {
-            'user': request.user,
-        }
-        return render(request, 'booking/menu_auth.html', context)
-    return render(request, 'booking/menu_pas_auth.html')
-
-def register(request):
-    if request.method == 'POST':
-        form = Register_Client(request.POST)
-        if form.is_valid():
-            client = form.save(commit=False)
-            username = form.cleaned_data['username']
-            password = form.cleaned_data['password']
-            prenom = form.cleaned_data['prenom']
-            nom = form.cleaned_data['nom']
-            new_user = User.objects.create_user(username=username, password=password, first_name=prenom, last_name=nom)
-            client.user = new_user
-            client.save()
-            login(request, new_user)
-            return redirect('menu')
-    else:
-        form = Register_Client()
-    return render(request, 'registration/register.html', {'form': form})
-
-@login_required()
-def profil(request):
-    template = "booking/profil.html"
-    return render(request, template)
-
 

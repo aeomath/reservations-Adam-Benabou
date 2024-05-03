@@ -17,6 +17,7 @@ class Client(models.Model):
     adresse = models.CharField(max_length=255)
     def __str__(self):
         return self.prenom + ' ' + self.nom
+ 
     
 class Passager(models.Model):
     prenom = models.CharField(max_length=255)
@@ -32,6 +33,8 @@ class Gare(models.Model):
     position = GeopositionField(null=True,default='48.8566,2.3522')
     def __str__(self):
         return self.nom
+    
+    
     
 class Trajet(models.Model):
     gare_depart = models.ForeignKey(Gare, on_delete=models.CASCADE, related_name='gare_depart')
@@ -64,8 +67,26 @@ class Trajet(models.Model):
         distance = R * c
 
         return distance
+    def reservations_par_jour_moy(self):
+        reservations = Reservation.objects.filter(trajet=self).order_by('date_reservation')
+        currentDate = None
+        res_by_day = []
+        isEmpty = True
+        for res in reservations:
+            isEmpty = False
+            if res.date_reservation.date() != currentDate:
+                res_by_day.append([res])
+                currentDate = res.date_reservation.date()
+            else:
+                res_by_day[-1].append(res)
+        if isEmpty:
+            return 0
+        avg = len(reservations)/((reservations[len(reservations)-1].date_reservation.date()-reservations[0].date_reservation.date()).days+1)
+                
+        return avg
     
-    
+    def nb_passagers(self):
+        return len(Reservation.objects.filter(trajet=self))
         
     def __str__(self):
         ## La méthode strftime est utilisée pour convertir un objet datetime en une chaîne de caractères formatée.
@@ -82,6 +103,9 @@ class Reservation(models.Model):
     client = models.ForeignKey(Client, on_delete=models.CASCADE)
     trajet = models.ForeignKey(Trajet, on_delete=models.CASCADE)
 
+    
+    
+    
     ## rajout de la contrainte d'unicité pour la place par trajet (code trouvé sur le net)
     class Meta:
         constraints = [
@@ -89,6 +113,8 @@ class Reservation(models.Model):
         ]
     def __str__(self):
         return str(self.trajet)
+
+        
 
 
 

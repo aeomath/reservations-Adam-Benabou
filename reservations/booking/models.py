@@ -31,8 +31,6 @@ class Gare(models.Model):
     nom = models.CharField(max_length=255)
     ville = models.CharField(max_length=255)
     position = GeopositionField(null=True,default='48.8566,2.3522')
-    position = GeopositionField(null=True)
-
     def __str__(self):
         return self.nom
     

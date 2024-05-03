@@ -26,7 +26,7 @@ class GareAdmin(admin.ModelAdmin):
     list_display = ('nom', 'ville', 'position' )
     class Media:
         js = (
-            'geoposition/geoposition.js',  # chemin vers geoposition.js
+            'geoposition/google.js',  # chemin vers geoposition.js
         )
 
     

@@ -24,11 +24,6 @@ class GareAdmin(admin.ModelAdmin):
     list_filter = ('ville',)
     search_fields = ('nom', 'ville')
     list_display = ('nom', 'ville', 'position' )
-    class Media:
-        js = (
-            'geoposition/google.js',  # chemin vers geoposition.js
-        )
-
     
     
 class PassagerAdmin(admin.ModelAdmin):

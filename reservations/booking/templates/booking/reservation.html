@@ -1,15 +1,18 @@
+<!-- Page de détail d'une réservation -->
 {% extends "booking/menu_auth.html" %}
-{% block en_tete%} {% endblock %}
+{% block en_tete%} 
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% load static %}
+{% endblock %}
 
 {% block title %} Reservation {% endblock %}
 
 
-{% load bootstrap5 %}
-
-{% bootstrap_css %}
-{% bootstrap_javascript %}
-
 {% block content %}
+<!-- tableau reservation-->
+<div>
 <a href="{% url 'reservations' %}" class="btn btn-secondary">Retour à mes reservations</a>
     {% if reservation %}
         <br> </br>
@@ -40,4 +43,42 @@
             Cette reservation n'existe pas.
         </div>
     {% endif %}
+</div>
+
+<!-- Inclusion de l'API de google de manière dynamique -->
+<script>
+    (g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once. Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})({
+      key: "AIzaSyC1l-MwdIRskm9NMrflRSYLyXsbysBv1vs",
+      v: "weekly",
+      callback: "initMap"
+      // Use the 'v' parameter to indicate the version to use (weekly, beta, alpha, etc.).
+      // Add other bootstrap parameters as needed, using camel case.
+    });
+  </script>
+
+<!--Inclusion du fichier JavaScript -->
+<script src="{% static 'booking/gmaps/reservation.js' %}"></script>
+<!-- Utilisation des fonctions du fichier js grace au context de la vue  -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Récupération des coordonnées de la gare de départ et d'arrivée 
+        // On doit convertir les coordonnées car la bibliothèque geopostion utilise des virgules et google des points ...
+        var startLat = parseFloat('{{ gare_depart.position.latitude }}'.replace(',', '.'));
+        var startLng = parseFloat('{{ gare_depart.position.longitude }}'.replace(',', '.'));
+        var endLat = parseFloat('{{ gare_arrivee.position.latitude }}'.replace(',', '.'));
+        var endLng = parseFloat('{{ gare_arrivee.position.longitude }}'.replace(',', '.'));
+        // Conversion date de départ du trajet en objet Date JavaScript
+        // cela permet de donner à Google un vrai trajet. Contrainte : il faut rentrer des données ( gare ,
+        // trajets, date de départ) qui existent dans la vraie vie
+        var departureTime = new Date('{{ depart_time }}');
+        calculateAndDisplayRoute({lat: startLat, lng: startLng}, {lat: endLat, lng: endLng}, departureTime);
+    });
+</script>
+
+<!-- Affichage de la carte et de l'itinéraire dessus ( et information à coté)-->
+<div style="display: flex; justify-content: space-between;">
+    <div id="map" style="height: 500px; width: 80%;"></div>
+    <div id="directionsPanel" style="height: 500px; width: 20%;"></div>
+</div>
+
 {% endblock %}

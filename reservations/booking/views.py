@@ -8,9 +8,10 @@ from django.contrib.auth import login
 from django.utils import timezone
 from django.urls import reverse
 
+import networkx as nx
+import geopy
 
-
-from .models import Trajet
+from .models import Trajet, Gare
 
 
 def trajets(request):
@@ -141,3 +142,51 @@ def profil(request):
     return render(request, template)
 
 
+
+
+
+
+@login_required()
+def find_an_itinerary(request):
+    if request.method == 'POST':
+       form = Register_Client(request.POST)
+       
+       
+       
+       
+       
+       
+       
+       
+    return render(request)
+
+
+def itineraire(source, target, start_datetime):    
+    #Create Graph
+    graph = create_graph(start_datetime)
+    
+    #Compute te shortest path from A to B
+    shortest_path = nx.bellman_ford_path(graph, source, target, weight='weight')
+
+    #Create the itinerary
+    itinerary = []
+    for i in range(len(shortest_path)-1):
+        itinerary += get_object_or_404(Trajet, gare_depart = shortest_path[i], gare_arrivee = shortest_path[i+1])
+    return itinerary
+    
+def create_graph(start_datetime):
+    G = nx.graph()
+    trajet_liste = get_list_or_404(Trajet)
+    for trajet in trajet_liste:
+        if trajet.date_depart >= start_datetime:
+            tuple_edge = compute_edge(trajet)
+            if tuple_edge not in list(G.edges):
+                G.add_edge(tuple_edge)
+    return G
+
+def compute_edge(trajet):
+    A = trajet.gare_depart
+    B = trajet.gare_arrivee
+    return ( trajet.gare_depart, trajet.gare_arrivee, geopy.distance.distance(A.ville.position,B.ville.position))
+    
+    

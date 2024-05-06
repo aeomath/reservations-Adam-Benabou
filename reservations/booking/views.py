@@ -149,11 +149,24 @@ def profil(request):
 @login_required()
 def find_an_itinerary(request):
     if request.method == 'POST':
-       form = Register_Client(request.POST)
-       
-       
-       
-       
+        form = Register_Client(request.POST)
+        if form.is_valid():
+            search_dep = form.cleaned_data['gare_depart']
+            search_arr = form.cleaned_data['gare_arrivee']
+            if search_dep:
+                trajets = trajets.filter(gare_depart__nom=search_dep)
+            if search_arr:
+                trajets = trajets.filter(gare_arrivee__nom=search_arr)
+        else:
+            trajets = get_list_or_404(Trajet)
+    else:
+        trajets = get_list_or_404(Trajet)
+        form = SearchForm()
+    context = {
+        'form': form,
+        'trajets': trajets,
+    }
+    return render(request, template, context)
        
        
        

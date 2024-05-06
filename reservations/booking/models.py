@@ -32,12 +32,14 @@ class Gare(models.Model):
     nom = models.CharField(max_length=255)
     ville = models.CharField(max_length=255)
     position = GeopositionField(null=True)
-
+    
+    ##Donne la fréquence des trajets par gare
     def freq_totale_trajets(self):
         trajets1 = Trajet.objects.filter(gare_depart=self)
         trajets2 = Trajet.objects.filter(gare_arrivee=self)
         return len(trajets1) + len(trajets2)
     
+    ##Donne la fréquence de passagers par gare, compte deux fois les passagers qui font une correspondance
     def freq_totale_pass(self):
         trajets1 = Trajet.objects.filter(gare_depart=self)
         trajets2 = Trajet.objects.filter(gare_arrivee=self)
@@ -84,6 +86,8 @@ class Trajet(models.Model):
         distance = R * c
 
         return distance
+    
+    ##Donne le nombre de réservations par jour moyenne
     def reservations_par_jour_moy(self):
         reservations = Reservation.objects.filter(trajet=self).order_by('date_reservation')
 
@@ -91,6 +95,7 @@ class Trajet(models.Model):
                 
         return avg
     
+    ##Donne le nombre de passagers total du trajet
     def nb_passagers(self):
         return len(Reservation.objects.filter(trajet=self))
     

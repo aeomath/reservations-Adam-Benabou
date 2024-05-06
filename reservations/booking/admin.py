@@ -9,13 +9,17 @@ class ClientAdmin(admin.ModelAdmin):
         (None, { 'fields': [ 'prenom', 'nom','user', 'telephone', 'adresse']}),
     )
 
+
+##Toutes la gestion et les recherches admin sont faites ici
 class TrajetAdmin(admin.ModelAdmin):
     list_display = ('__str__','date_depart', 'date_arrivee', 'reservations_par_jour_moy', 'nb_passagers')
     list_filter = ('gare_depart', 'gare_arrivee')
     search_fields = ('gare_depart', 'gare_arrivee')
 
+    ##Déclare la liste de passager comme field pour être lu par Django
     readonly_fields = ('liste_passagers',)
     @admin.display(description="liste des passagers")
+    ##Rends un string déjà formatté pour être affiché dans la page admin
     def liste_passagers(self, obj):
             resas = Reservation.objects.filter(trajet=obj)
             passas = ""

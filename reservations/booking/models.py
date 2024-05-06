@@ -86,18 +86,7 @@ class Trajet(models.Model):
         return distance
     def reservations_par_jour_moy(self):
         reservations = Reservation.objects.filter(trajet=self).order_by('date_reservation')
-        currentDate = None
-        res_by_day = []
-        isEmpty = True
-        for res in reservations:
-            isEmpty = False
-            if res.date_reservation.date() != currentDate:
-                res_by_day.append([res])
-                currentDate = res.date_reservation.date()
-            else:
-                res_by_day[-1].append(res)
-        if isEmpty:
-            return 0
+
         avg = len(reservations)/((reservations[len(reservations)-1].date_reservation.date()-reservations[0].date_reservation.date()).days+1)
                 
         return avg

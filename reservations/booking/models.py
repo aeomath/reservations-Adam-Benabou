@@ -7,7 +7,6 @@ from django.utils import timezone
 from django.contrib.auth.models import User
 from geoposition.fields import GeopositionField
 import math
-import numpy as np
 from django.contrib import admin
 
 class Client(models.Model):
@@ -147,9 +146,6 @@ class Reservation(models.Model):
     client = models.ForeignKey(Client, on_delete=models.CASCADE)
     trajet = models.ForeignKey(Trajet, on_delete=models.CASCADE)
 
-    
-    
-    
     ## rajout de la contrainte d'unicité pour la place par trajet (code trouvé sur le net)
     class Meta:
         constraints = [
@@ -158,8 +154,7 @@ class Reservation(models.Model):
     def __str__(self):
         return str(self.trajet)
 
-        
-
+    
 
 
 

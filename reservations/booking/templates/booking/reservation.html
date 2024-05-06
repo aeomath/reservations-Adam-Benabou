@@ -14,6 +14,7 @@
 <!-- tableau reservation-->
 <div>
 <a href="{% url 'reservations' %}" class="btn btn-secondary">Retour à mes reservations</a>
+<a href="{% url 'itineraire' %}" class="btn btn-secondary">Retour aux réservations d'itinéraire</a>
     {% if reservation %}
         <br> </br>
         <h2>{{reservation}}</h2>

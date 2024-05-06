@@ -2,7 +2,7 @@ from django import forms
 from django import forms
 from .models import Gare, Trajet, Passager, Reservation, Client
 from django.contrib.auth.models import User
-
+from django.contrib.admin.widgets import AdminDateWidget
 
 class SearchForm(forms.Form):
     gare_depart = forms.ModelChoiceField(queryset=Gare.objects.all(), required=False)
@@ -32,3 +32,9 @@ class PassagerForm(forms.ModelForm):
     class Meta:
         model = Passager
         fields = ['prenom', 'nom','date_naissance']
+        
+class ItineraryForm(forms.Form):
+    gare_depart = forms.ModelChoiceField(queryset=Gare.objects.all(), required=False)
+    gare_arrivee = forms.ModelChoiceField(queryset=Gare.objects.all(), required=False)
+    date_de_depart = forms.DateTimeField(widget=AdminDateWidget)
+

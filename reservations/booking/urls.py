@@ -15,7 +15,8 @@ urlpatterns = [
     path("create_passager", views.create_passager, name="create_passager"),
     ## trajets (urls publics)
     path("trajets/", views.trajets, name="trajets"),
-    ## reservations (urls privés)
+    path("itineraire/", views.itineraire, name="itineraire"),
+    path("nouvel_itineraire/<int:trajet_id>", views.nouvel_itineraire, name = "nouvelle_reservation_itineraire"),
     path("reservations/", views.reservations, name="reservations"),
     path("reservations/<int:reservation_id>/", views.reservation, name="reservation"),
     path("nouvelle_reservation/", views.edit_reservation, name="nouvelle_reservation"),

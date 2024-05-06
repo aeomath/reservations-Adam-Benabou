@@ -1,11 +1,12 @@
 from django.shortcuts import get_list_or_404, get_object_or_404, render, redirect
 from django.http import HttpResponse
 from .models import Trajet,Reservation,Passager
-from booking.form import SearchForm , ReservationForm, Register_Client,PassagerForm
+from booking.form import SearchForm , ReservationForm, Register_Client,PassagerForm, ItineraryForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib.auth import login
 from django.utils import timezone
+from .models import Trajet
 
 import json
 
@@ -18,6 +19,8 @@ def menu(request):
         return render(request, 'booking/menu_auth.html', context)
     return render(request, 'booking/menu_pas_auth.html')
 
+import networkx as nx
+import math
 
 
 
@@ -201,3 +204,137 @@ def chart_remplissage(request, id):
     }
     template = "/booking/chart"
     return render(request, template, {"chart_info":chart_info})
+
+def menu(request):
+    if request.user.is_authenticated:
+        context = {
+            'user': request.user,
+        }
+        return render(request, 'booking/menu_auth.html', context)
+    return render(request, 'booking/menu_pas_auth.html')
+
+def register(request):
+    if request.method == 'POST':
+        form = Register_Client(request.POST)
+        if form.is_valid():
+            client = form.save(commit=False)
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
+            prenom = form.cleaned_data['prenom']
+            nom = form.cleaned_data['nom']
+            new_user = User.objects.create_user(username=username, password=password, first_name=prenom, last_name=nom)
+            client.user = new_user
+            client.save()
+            login(request, new_user)
+            return redirect('menu')
+    else:
+        form = Register_Client()
+    return render(request, 'registration/register.html', {'form': form})
+
+@login_required()
+def profil(request):
+    template = "booking/profil.html"
+    return render(request, template)
+
+
+
+
+
+
+@login_required()
+def itineraire(request):
+    template = "booking/itinerary.html"
+    
+    if request.method == 'POST':
+        form = ItineraryForm(request.POST)
+        if form.is_valid():
+            source = form.cleaned_data['gare_depart']
+            target = form.cleaned_data['gare_arrivee']
+            start_datetime = form.cleaned_data['date_de_depart']   
+            
+            itinerary_list = compute_itinerary(source, target, start_datetime)
+        else:
+            itinerary_list = get_list_or_404(Trajet)
+    else:
+        itinerary_list = get_list_or_404(Trajet)
+        form = SearchForm()
+    context = {
+        'form': form,
+        'itineraire': itinerary_list,
+    }
+    return render(request, template, context)
+       
+
+
+def compute_itinerary(source, target, start_datetime):    
+    #Create Graph
+    graph = create_graph(start_datetime)
+    #Compute te shortest path from A to B
+    shortest_path = nx.bellman_ford_path(graph, source, target, weight='weight')
+    #Create the itinerary
+    itinerary = []
+    for i in range(len(shortest_path)-1):
+        itinerary.append(get_object_or_404(Trajet, gare_depart = shortest_path[i], gare_arrivee = shortest_path[i+1]))
+    return itinerary
+    
+def create_graph(start_datetime):
+    G = nx.Graph()
+    trajet_liste = get_list_or_404(Trajet)
+    for trajet in trajet_liste:
+        if trajet.date_depart >= start_datetime:
+            list_edge = compute_edge(trajet)
+            G.add_edge(list_edge[0],list_edge[1], weight=list_edge[2])
+    return G
+
+def compute_edge(trajet):
+    A = trajet.gare_depart
+    B = trajet.gare_arrivee
+    return [trajet.gare_depart, trajet.gare_arrivee, calculate_distance(A.position.latitude ,A.position.longitude,
+                                                                        B.position.latitude, B.position.longitude)]
+    
+    
+def calculate_distance(lat1, lon1, lat2, lon2):
+        # Conversion des degrés en radians
+        lat1, lon1, lat2, lon2 = map(math.radians, [lat1, lon1, lat2, lon2])
+
+        # Rayon de la terre en kilomètres
+        R = 6371.0
+
+        # Différences
+        dlon = lon2 - lon1
+        dlat = lat2 - lat1
+
+        # Formule de Haversine
+        a = math.sin(dlat / 2)**2 + math.cos(lat1) * math.cos(lat2) * math.sin(dlon / 2)**2
+        c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
+
+        # Distance
+        distance = R * c
+
+        return distance
+    
+def nouvel_itineraire(request, trajet_id):
+    
+    if request.method == 'POST':
+        form = ReservationForm(data = request.POST,client = request.user.client)
+        if form.is_valid():
+            reservation = form.save(commit=False)
+            ## Si on choisit un trajet à reserver , et donc si un trajet est en paramètre, on l'ajoute à la réservation
+            if trajet_id:
+                reservation.trajet = get_object_or_404(Trajet, pk=trajet_id)
+            reservation.client = request.user.client
+            reservation.date_reservation = timezone.now()   
+            reservation.save()
+            form.save_m2m()
+            return redirect('reservation',reservation_id=reservation.pk)
+    else:
+        if trajet_id:
+            trajet = get_object_or_404(Trajet, pk=trajet_id)
+            reservation=Reservation(trajet=trajet)
+            form = ReservationForm(instance=reservation,client = request.user.client)
+        ## Si on ne choisit pas de trajet à reserver , on crée une réservation vide
+        else:
+            form = ReservationForm(client = request.user.client)
+            
+    template = "booking/reservation_itineraire.html"
+    return render(request, template, {'form': form})

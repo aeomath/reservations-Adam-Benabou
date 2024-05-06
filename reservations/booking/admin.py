@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Gare, Trajet , Client, Passager, Reservation, Reservation_Itineraire
+from .models import Gare, Trajet , Client, Passager, Reservation
 
 
 class ClientAdmin(admin.ModelAdmin):
@@ -41,14 +41,14 @@ class ReservationAdmin(admin.ModelAdmin):
         ("Information passager et client", {'fields': ['passager', 'client']}),
     )
 
-class Reservation_ItineraireAdmin(admin.ModelAdmin):
-    list_display = ('__str__', 'numero_reservation_it')
-    search_fields = ('numero_reservation_it','gare_depart', 'gare_arrivee')
-    list_filter = ('numero_reservation_it','gare_depart', 'gare_arrivee')
-    fieldsets = (
-        (None, { 'fields': ['gare_depart', 'gare_arrivee']}),
-        ("Information passager et client", {'fields': ['passager', 'client']}),
-    )
+# class Reservation_ItineraireAdmin(admin.ModelAdmin):
+#     list_display = ('__str__', 'numero_reservation_it')
+#     search_fields = ('numero_reservation_it','gare_depart', 'gare_arrivee')
+#     list_filter = ('numero_reservation_it','gare_depart', 'gare_arrivee')
+#     fieldsets = (
+#         (None, { 'fields': ['gare_depart', 'gare_arrivee']}),
+#         ("Information passager et client", {'fields': ['passager', 'client']}),
+#     )
 
 # Register your models here.
 admin.site.register(Client, ClientAdmin)
@@ -56,4 +56,4 @@ admin.site.register(Gare, GareAdmin)
 admin.site.register(Trajet, TrajetAdmin)
 admin.site.register(Passager, PassagerAdmin)
 admin.site.register(Reservation, ReservationAdmin)
-admin.site.register(Reservation_Itineraire, Reservation_ItineraireAdmin)
+# admin.site.register(Reservation_Itineraire, Reservation_ItineraireAdmin)

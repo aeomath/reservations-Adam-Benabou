@@ -1,7 +1,7 @@
 from django.shortcuts import get_list_or_404, get_object_or_404, render, redirect
 from django.http import HttpResponse
 from .models import Trajet,Reservation
-from booking.form import SearchForm , ReservationForm, Register_Client, ItineraryForm,ReservationItineraireForm
+from booking.form import SearchForm , ReservationForm, Register_Client, ItineraryForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib.auth import login
@@ -162,9 +162,11 @@ def itineraire(request):
     else:
         itinerary_list = get_list_or_404(Trajet)
         form = SearchForm()
+    id_list = [trajet.id for trajet in itinerary_list]
     context = {
         'form': form,
         'itineraire': itinerary_list,
+        'id_list': id_list
     }
     return render(request, template, context)
        
@@ -217,34 +219,28 @@ def calculate_distance(lat1, lon1, lat2, lon2):
 
         return distance
     
-def nouvel_itineraire(request, list_trajet):
+def nouvel_itineraire(request, trajet_id):
     
-    form_it = ReservationItineraireForm(data = request.POST,client = request.user.client)
-    form_list = []
-    for trajet in list_trajet:
-        if request.method == 'POST':
-            form = ReservationItineraireForm(data = request.POST,client = request.user.client)
-            form_list.append(form)
-            if form.is_valid():
-                reservation = form.save(commit=False)
-                reservation.trajet = trajet
-                reservation.client = request.user.client
-                reservation.date_reservation = timezone.now()   
-                reservation.save()
-                form.save_m2m()
-        liste_trajet += trajet
-        
-    if form_it.is_valid():
-        reservation = form_it.save(commit=False)
-        reservation.client = request.user.client
-        
-        
-        
-        
+    if request.method == 'POST':
+        form = ReservationForm(data = request.POST,client = request.user.client)
+        if form.is_valid():
+            reservation = form.save(commit=False)
+            ## Si on choisit un trajet à reserver , et donc si un trajet est en paramètre, on l'ajoute à la réservation
+            if trajet_id:
+                reservation.trajet = get_object_or_404(Trajet, pk=trajet_id)
+            reservation.client = request.user.client
+            reservation.date_reservation = timezone.now()   
+            reservation.save()
+            form.save_m2m()
+            return redirect('reservation',reservation_id=reservation.pk)
     else:
-        for trajet in itineraire:
+        if trajet_id:
+            trajet = get_object_or_404(Trajet, pk=trajet_id)
             reservation=Reservation(trajet=trajet)
             form = ReservationForm(instance=reservation,client = request.user.client)
+        ## Si on ne choisit pas de trajet à reserver , on crée une réservation vide
+        else:
+            form = ReservationForm(client = request.user.client)
             
-    template = "booking/edit_reservation.html"
+    template = "booking/reservation_itineraire.html"
     return render(request, template, {'form': form})

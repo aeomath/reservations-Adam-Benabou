@@ -91,22 +91,22 @@ class Reservation(models.Model):
         return str(self.trajet)
 
 
-class Reservation_Itineraire(models.Model):
-    numero_reservation_it = models.AutoField(primary_key=True)
-    passager = models.ForeignKey(Passager, on_delete=models.CASCADE)
-    client = models.ForeignKey(Client, on_delete=models.CASCADE)
-    gare_depart = models.ForeignKey(Gare, on_delete=models.CASCADE, related_name='origine')
-    gare_arrivee = models.ForeignKey(Gare, on_delete=models.CASCADE, related_name='destination')
+# class Reservation_Itineraire(models.Model):
+#     numero_reservation_it = models.AutoField(primary_key=True)
+#     passager = models.ForeignKey(Passager, on_delete=models.CASCADE)
+#     client = models.ForeignKey(Client, on_delete=models.CASCADE)
+#     gare_depart = models.ForeignKey(Gare, on_delete=models.CASCADE, related_name='origine')
+#     gare_arrivee = models.ForeignKey(Gare, on_delete=models.CASCADE, related_name='destination')
 
-    liste_trajet =  models.ManyToManyField(Trajet, related_name="trajets_itinerary")
+#     liste_trajet =  models.ManyToManyField(Trajet, related_name="trajets_itinerary")
 
-    ## rajout de la contrainte d'unicité pour la place par trajet (code trouvé sur le net)
-    class Meta:
-        constraints = [
-            models.UniqueConstraint(fields=['numero_reservation_it'], name='unique_numero_itineraire'),
-        ]
-    def __str__(self):
-        return str(self.gare_depart.nom + ' - ' + self.gare_arrivee.nom)
+#     ## rajout de la contrainte d'unicité pour la place par trajet (code trouvé sur le net)
+#     class Meta:
+#         constraints = [
+#             models.UniqueConstraint(fields=['numero_reservation_it'], name='unique_numero_itineraire'),
+#         ]
+#     def __str__(self):
+#         return str(self.gare_depart.nom + ' - ' + self.gare_arrivee.nom)
     
     
     

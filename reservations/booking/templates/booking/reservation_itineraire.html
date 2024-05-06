@@ -1,3 +1,6 @@
+{% extends "booking/menu_auth.html" %}
+{% block en_tete%} {% endblock %}
+
 {% load bootstrap5%}
 
 {# Load the tag library #}
@@ -10,20 +13,15 @@
 {% bootstrap_messages %}
 
 
-{% block title %} {%     if reservation_id %}Modifier{% else %}Créer{% endif %} une réservation {% endblock %}
+{% block title %} Créer la réservation {% endblock %}
 
 
 {% block content %}
 <div class="container">
     <div class="row justify-content-left">
         <div class="col-md-6">
-            <h1>{% if reservation_id %}Modifier{% else %}Créer{% endif %} une réservation</h1>
-
-            {% if reservation_id %}
-                <form action="{% url 'modifier_reservation' reservation_id%}" method="post">
-            {% else %}
+            <h1>Créer la réservation</h1>
                 <form action="{% url 'nouvelle_reservation' %}" method="post">
-            {% endif %}
                 {% bootstrap_form form %}
                 {% csrf_token %}
                 {% buttons %}

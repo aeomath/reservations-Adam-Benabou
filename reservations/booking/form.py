@@ -1,6 +1,6 @@
 from django import forms
 from django import forms
-from .models import Gare, Trajet, Passager, Reservation, Client, Reservation_Itineraire
+from .models import Gare, Trajet, Passager, Reservation, Client
 from django.contrib.auth.models import User
 from django.contrib.admin.widgets import AdminDateWidget
 
@@ -28,16 +28,8 @@ class Register_Client(forms.ModelForm):
         model = Client
         fields = ['prenom', 'nom','adresse','telephone', 'username','password']
         
-class ItineraryTorm(forms.Form):
+class ItineraryForm(forms.Form):
     gare_depart = forms.ModelChoiceField(queryset=Gare.objects.all(), required=False)
     gare_arrivee = forms.ModelChoiceField(queryset=Gare.objects.all(), required=False)
     date_de_depart = forms.DateTimeField(widget=AdminDateWidget)
 
-class ReservationItineraireForm(forms.ModelForm):
-    def __init__(self, client = None , *args, **kwargs):
-        super(ReservationItineraireForm, self).__init__(*args , **kwargs)
-        if client:
-            self.fields['passager'].queryset = Passager.objects.filter(client=client)
-    class Meta:
-        model = Reservation_Itineraire
-        fields = ['gare_depart','gare_arrivee','passager','liste_reservation']

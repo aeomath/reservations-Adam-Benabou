@@ -7,7 +7,6 @@ from django.utils import timezone
 from django.contrib.auth.models import User
 from geoposition.fields import GeopositionField
 import math
-import numpy as np
 
 class Client(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)

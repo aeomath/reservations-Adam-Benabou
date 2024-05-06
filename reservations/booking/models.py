@@ -33,6 +33,21 @@ class Gare(models.Model):
     ville = models.CharField(max_length=255)
     position = GeopositionField(null=True)
 
+    def freq_totale_trajets(self):
+        trajets1 = Trajet.objects.filter(gare_depart=self)
+        trajets2 = Trajet.objects.filter(gare_arrivee=self)
+        return len(trajets1) + len(trajets2)
+    
+    def freq_totale_pass(self):
+        trajets1 = Trajet.objects.filter(gare_depart=self)
+        trajets2 = Trajet.objects.filter(gare_arrivee=self)
+        nbpassas = 0
+        for trajet in trajets1:
+            nbpassas += len(Reservation.objects.filter(trajet=trajet))
+        for trajet in trajets2:
+            nbpassas += len(Reservation.objects.filter(trajet=trajet))
+        return nbpassas
+    
     def __str__(self):
         return self.nom
     

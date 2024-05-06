@@ -37,7 +37,7 @@ class TrajetAdmin(admin.ModelAdmin):
 class GareAdmin(admin.ModelAdmin):
     list_filter = ('ville',)
     search_fields = ('nom', 'ville')
-    list_display = ('nom', 'ville')
+    list_display = ('nom', 'ville', 'freq_totale_pass', 'freq_totale_trajets')
     
 class PassagerAdmin(admin.ModelAdmin):
     list_display = ('__str__','date_naissance')

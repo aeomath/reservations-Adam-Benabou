@@ -1,7 +1,7 @@
 from django.shortcuts import get_list_or_404, get_object_or_404, render, redirect
 from django.http import HttpResponse
 from .models import Trajet,Reservation
-from booking.form import SearchForm , ReservationForm, Register_Client
+from booking.form import SearchForm , ReservationForm, Register_Client, Ininerary_Form
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib.auth import login
@@ -9,7 +9,8 @@ from django.utils import timezone
 from django.urls import reverse
 
 import networkx as nx
-import geopy
+import math
+import numpy as np
 
 from .models import Trajet, Gare
 
@@ -147,59 +148,72 @@ def profil(request):
 
 
 @login_required()
-def find_an_itinerary(request):
+def itineraire(request):
+    template = "booking/itinerary.html"
+    
     if request.method == 'POST':
-        form = Register_Client(request.POST)
+        form = Ininerary_Form(request.POST)
         if form.is_valid():
-            search_dep = form.cleaned_data['gare_depart']
-            search_arr = form.cleaned_data['gare_arrivee']
-            if search_dep:
-                trajets = trajets.filter(gare_depart__nom=search_dep)
-            if search_arr:
-                trajets = trajets.filter(gare_arrivee__nom=search_arr)
+            source = form.cleaned_data['gare_depart']
+            target = form.cleaned_data['gare_arrivee']
+            start_datetime = form.cleaned_data['date_de_depart']   
+            itinerary_list = compute_itinerary(source, target, start_datetime)
         else:
-            trajets = get_list_or_404(Trajet)
+            itinerary_list = get_list_or_404(Trajet)
     else:
-        trajets = get_list_or_404(Trajet)
+        itinerary_list = get_list_or_404(Trajet)
         form = SearchForm()
     context = {
         'form': form,
-        'trajets': trajets,
+        'initeraire': itinerary_list,
     }
     return render(request, template, context)
        
-       
-       
-       
-    return render(request)
 
 
-def itineraire(source, target, start_datetime):    
+def compute_itinerary(source, target, start_datetime):    
     #Create Graph
     graph = create_graph(start_datetime)
-    
     #Compute te shortest path from A to B
     shortest_path = nx.bellman_ford_path(graph, source, target, weight='weight')
-
     #Create the itinerary
     itinerary = []
     for i in range(len(shortest_path)-1):
-        itinerary += get_object_or_404(Trajet, gare_depart = shortest_path[i], gare_arrivee = shortest_path[i+1])
+        itinerary.append(get_object_or_404(Trajet, gare_depart = shortest_path[i], gare_arrivee = shortest_path[i+1]))
     return itinerary
     
 def create_graph(start_datetime):
-    G = nx.graph()
+    G = nx.Graph()
     trajet_liste = get_list_or_404(Trajet)
     for trajet in trajet_liste:
         if trajet.date_depart >= start_datetime:
-            tuple_edge = compute_edge(trajet)
-            if tuple_edge not in list(G.edges):
-                G.add_edge(tuple_edge)
+            list_edge = compute_edge(trajet)
+            G.add_edge(list_edge[0],list_edge[1], weight=list_edge[2])
     return G
 
 def compute_edge(trajet):
     A = trajet.gare_depart
     B = trajet.gare_arrivee
-    return ( trajet.gare_depart, trajet.gare_arrivee, geopy.distance.distance(A.ville.position,B.ville.position))
+    return [trajet.gare_depart, trajet.gare_arrivee, calculate_distance(A.position.latitude ,A.position.longitude,
+                                                                        B.position.latitude, B.position.longitude)]
     
     
+def calculate_distance(lat1, lon1, lat2, lon2):
+        # Conversion des degrés en radians
+        lat1, lon1, lat2, lon2 = map(math.radians, [lat1, lon1, lat2, lon2])
+
+        # Rayon de la terre en kilomètres
+        R = 6371.0
+
+        # Différences
+        dlon = lon2 - lon1
+        dlat = lat2 - lat1
+
+        # Formule de Haversine
+        a = math.sin(dlat / 2)**2 + math.cos(lat1) * math.cos(lat2) * math.sin(dlon / 2)**2
+        c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
+
+        # Distance
+        distance = R * c
+
+        return distance

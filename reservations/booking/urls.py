@@ -7,6 +7,7 @@ urlpatterns = [
     path('accounts/', include('django.contrib.auth.urls')),
     path("", views.menu, name="menu"),
     path("trajets/", views.trajets, name="trajets"),
+    path("itinerary/", views.itineraire, name="itineraire"),
     path("reservations/", views.reservations, name="reservations"),
     path("reservations/<int:reservation_id>/", views.reservation, name="reservation"),
     path("nouvelle_reservation/", views.edit_reservation, name="nouvelle_reservation"),

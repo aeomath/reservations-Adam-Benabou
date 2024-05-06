@@ -1,0 +1,54 @@
+{%extends "booking/menu_auth.html"%}
+{%block title%}Creer passager{%endblock%}
+{%block en_tete%}{%endblock%}
+
+{% load bootstrap5%}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% bootstrap_messages %}
+
+{%block content%}
+
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+
+    <div id="container" style="width:100%; height:400px;"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            Highcharts.chart('container', {
+                chart: {
+                    type: 'column'
+                },
+
+                title: {
+                    text: '{{ chart_info.title }}'
+                },
+
+                yAxis: {
+                    title: {
+                        text: '{{ chart_info.y_axis_label }}'
+                    }
+                },
+
+                xAxis: {
+                    categories: {{ chart_info.categories }},
+                    crosshair: true,
+                    accessibility: {
+                        description: 'Countries'
+                    }
+                },
+
+                series: [
+                {% for trajet in chart_info.data %}
+                    {
+                        name: '{{ trajet.0 }}',
+                        data: {{ trajet.1 }}
+                    },
+                {% endfor %}
+                    
+                ]
+            });
+        });
+    </script>
+
+{% endblock %}

@@ -67,20 +67,23 @@ class Trajet(models.Model):
         distance = R * c
 
         return distance
+    
+    def nb_reservations_par_jour(self):
+        reservations = Reservation.objects.filter(trajet=self).order_by('date_reservation')
+        
+        res_by_day = []
+        for res in reservations:
+            ## res_by_day = {(date,nom_trajet): [nb_res]}
+            res_date = res.date_reservation.date()
+            key = (res_date, f"{self.gare_depart}=>{self.gare_arrivee}")
+            if not(res_date in res_by_day.keys()[0]):
+                res_by_day[key] = [1]
+            else:
+                res_by_day[key][0] += 1
+        return res_by_day
+    
     def reservations_par_jour_moy(self):
         reservations = Reservation.objects.filter(trajet=self).order_by('date_reservation')
-        currentDate = None
-        res_by_day = []
-        isEmpty = True
-        for res in reservations:
-            isEmpty = False
-            if res.date_reservation.date() != currentDate:
-                res_by_day.append([res])
-                currentDate = res.date_reservation.date()
-            else:
-                res_by_day[-1].append(res)
-        if isEmpty:
-            return 0
         avg = len(reservations)/((reservations[len(reservations)-1].date_reservation.date()-reservations[0].date_reservation.date()).days+1)
                 
         return avg

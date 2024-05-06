@@ -7,6 +7,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import login
 from django.utils import timezone
 
+import json
 
     
 def menu(request):
@@ -160,3 +161,31 @@ def delete_reservation(request, reservation_id):
     template = "booking/delete_reservation.html"
     return render(request, template, {'reservation': reservation})
 
+# def column_chart_view(request, chart_info):
+#     return render(request, 'booking/chart.html', {'chart_info': chart_info})
+
+def chart_reservations_par_trajet_par_jour(request):
+    chart_info = {
+        'type': 'column',
+        'title': "Sample Title",
+        'y_axis_label' : "Nombre de réservations",
+        'data' : [
+            ['Corn', [406292, 260000, 107000, 68300, 27500, 14500]],
+            ['Wheat', [51086, 136000, 5500, 141000, 107180, 77000]]
+        ]
+    }
+    
+    trajets = get_list_or_404(Trajet)
+    
+    dictio = {"trajet_name": []} ## {date: [nb_res_par_trajet]}
+    
+    for trajet in trajets:
+        res_by_day = Trajet.nb_reservations_par_jour(trajet)
+        dictio.update({key: dictio[key].append[res_by_day[key]] if key in res_by_day else dictio[key] for key in dictio})
+        dictio.update({key: res_by_day[key] for key in res_by_day if key not in dictio})
+        
+        
+    chart_info['categories'] = dictio.keys()
+        
+        
+    return render(request, 'booking/chart.html', {'chart_info': chart_info})

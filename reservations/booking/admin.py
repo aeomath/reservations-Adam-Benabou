@@ -1,5 +1,6 @@
 from django.contrib import admin
 from .models import Gare, Trajet , Client, Passager, Reservation
+from geoposition.fields import GeopositionField
 
 
 class ClientAdmin(admin.ModelAdmin):
@@ -41,7 +42,15 @@ class TrajetAdmin(admin.ModelAdmin):
 class GareAdmin(admin.ModelAdmin):
     list_filter = ('ville',)
     search_fields = ('nom', 'ville')
-    list_display = ('nom', 'ville', 'freq_totale_pass', 'freq_totale_trajets')
+
+    list_display = ('nom', 'ville', 'position', 'freq_totale_pass', 'freq_totale_trajets' )
+    class Media:
+        js = (
+            'geoposition/google.js',  # chemin vers geoposition.js
+        )
+
+    
+
     
 class PassagerAdmin(admin.ModelAdmin):
     list_display = ('__str__','date_naissance')

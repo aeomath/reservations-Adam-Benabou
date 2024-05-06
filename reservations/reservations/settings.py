@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "bootstrap5",
-    "geoposition"
+    "geoposition",
 ]
 
 MIDDLEWARE = [
@@ -133,4 +133,22 @@ LOGIN_URL = '/booking/accounts/login'
 LOGIN_REDIRECT_URL = '/booking/trajets'
 LOGOUT_REDIRECT_URL = '/booking'
 
+## Google map 
+# GEOPOSITION_GOOGLE_MAPS_API_KEY = 'AIzaSyC1l-MwdIRskm9NMrflRSYLyXsbysBv1vs'
 GEOPOSITION_BACKEND = 'leaflet'
+API_KEY ='AIzaSyC1l-MwdIRskm9NMrflRSYLyXsbysBv1vs'
+
+GEOPOSITION_MAP_OPTIONS = {
+    'center': {'lat': 48.8566, 'lng': 2.3522},
+    'zoom': 5,
+    'minZoom': 3,
+    'maxZoom': 15,
+    'scrollwheel': True,
+    'parentSelector': 'li.changeform-tabs-item',
+    'isDjangoAdmin': True
+}
+
+GEOPOSITION_MARKER_OPTIONS = {
+    ##'cursor': 'move',
+    'draggable': True
+}

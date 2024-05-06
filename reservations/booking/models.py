@@ -31,7 +31,8 @@ class Passager(models.Model):
 class Gare(models.Model):
     nom = models.CharField(max_length=255)
     ville = models.CharField(max_length=255)
-    position = GeopositionField(null=True)
+
+    position = GeopositionField(null=True, default='48.8566,2.3522')
     
     ##Donne la fréquence des trajets par gare
     def freq_totale_trajets(self):
@@ -50,6 +51,7 @@ class Gare(models.Model):
             nbpassas += len(Reservation.objects.filter(trajet=trajet))
         return nbpassas
     
+
     def __str__(self):
         return self.nom
     

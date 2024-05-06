@@ -20,6 +20,12 @@
                 <p> nom : {{user.client.nom}} </p>
                 <p> telephone : {{user.client.telephone}} </p>
                 <p> adresse : {{user.client.adresse}} </p>  
+                <p> passagers :<p>
+                <ul>
+                    {% for passager in passagers %}
+                            <li><strong>{{passager.prenom }} {{ passager.nom }}<strong></li>
+                    {% endfor %}
+                </ul>
             </div>
         </div>
     </div>

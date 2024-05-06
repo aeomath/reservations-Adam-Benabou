@@ -27,3 +27,8 @@ class Register_Client(forms.ModelForm):
     class Meta:
         model = Client
         fields = ['prenom', 'nom','adresse','telephone', 'username','password']
+
+class PassagerForm(forms.ModelForm):
+    class Meta:
+        model = Passager
+        fields = ['prenom', 'nom','date_naissance']

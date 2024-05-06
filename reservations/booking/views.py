@@ -170,6 +170,7 @@ def chart_reservations_par_jour(request, timestamp):
     data = []
     
     chart_info = {
+        'timestamp': timestamp,
         'type': 'column',
         'title': dateformat.format(res_date, "l, d M Y").lower().capitalize(),
         'y_axis_label' : "Nombre de réservations"
@@ -177,7 +178,7 @@ def chart_reservations_par_jour(request, timestamp):
     for trajet in trajets:
         data.append([f"{trajet.gare_depart} => {trajet.gare_arrivee}", Trajet.nb_reservations_par_jour(trajet, res_date)])
         
-    #chart_info['categories'] = [date.strftime("%d/%m/%Y")]
+    #chart_info['categories'] = [res_date.strftime("%d/%m/%Y")]
     chart_info['data'] = data
         
     return render(request, 'booking/charts.html', {'chart_info': chart_info})

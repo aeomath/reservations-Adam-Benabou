@@ -1,0 +1,69 @@
+{%extends "booking/menu_auth.html"%}
+{%block title%}Creer passager{%endblock%}
+{%block en_tete%}{%endblock%}
+
+{% load static %}
+{% load bootstrap5%}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% bootstrap_messages %}
+
+{%block content%}
+
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <div style="display: flex; justify-content: space-between; align-items: center; background-color: white; padding-top: 10px; padding-bottom: 10px;">
+        <span>
+            <a href="{%url 'chart_reservations_par_jour' chart_info.timestamp|add:"-86400" %}">
+                <img src="{%static 'booking/images/chevron-left.png'%}" width="80" height="80" alt="">
+            </a>
+        </span>
+        <span id="container" style="width:100%; height:400px;"></span>
+        <span>
+            <a href="{%url 'chart_reservations_par_jour' chart_info.timestamp|add:"+86400" %}">
+                <img src="{%static 'booking/images/chevron-left.png'%}" width="80" height="80" alt="" style="transform: scaleX(-1);">
+            </a>
+        </span>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            Highcharts.chart('container', {
+                chart: {
+                    type: '{{ chart_info.type }}'
+                },
+
+                title: {
+                    text: '{{ chart_info.title }}'
+                },
+
+                yAxis: {
+                    title: {
+                        text: '{{ chart_info.y_axis_label }}'
+                    }
+                },
+
+                xAxis: {
+                    {% if chart_info.categories %}
+                    categories: {{ chart_info.categories|safe }},
+                    {% else %}
+                    labels: {
+                        enabled: false
+                    }
+                    {% endif %}
+                },
+
+                series: [
+                {% for trajet in chart_info.data %}
+                    {
+                        name: '{{ trajet.0 }}',
+                        data: [{{ trajet.1 }}]
+                    },
+                {% endfor %}
+                    
+                ]
+            });
+        });
+    </script>
+
+
+
+{% endblock %}

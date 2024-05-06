@@ -108,12 +108,8 @@ class Trajet(models.Model):
     
     ## Retourne le nombre de reservations du trajet (self) faites le jour "date"
     def nb_reservations_par_jour(self, date):
-        reservations = Reservation.objects.filter(trajet=self)
-        nb_res = 0
-        for res in reservations:
-            if res.date_reservation.date()==date:
-                nb_res+=1
-        return nb_res
+        return Reservation.objects.filter(trajet=self, date_reservation__date=date).count()
+
     
     def reservations_par_jour_moy(self):
         reservations = Reservation.objects.filter(trajet=self).order_by('date_reservation')

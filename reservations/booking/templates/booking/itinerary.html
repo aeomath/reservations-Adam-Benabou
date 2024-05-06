@@ -14,7 +14,7 @@
 
 {% block content %}
     <h1>Définir un itinéraire</h1>
-    {% if initeraire %}
+    {% if itineraire %}
         
         <form action="{% url 'itineraire' %}" method="post" class="dropdown">
             {% csrf_token %}
@@ -33,14 +33,15 @@
                 </tr>
             </thead>
             <tbody>
-                {% for trajet in initeraire %}
+                {% for trajet in itineraire %}
                     <tr>
                         <td> {{ trajet.gare_depart }} </td>
                         <td> {{ trajet.gare_arrivee }} </td>
                         <td> {{ trajet.date_depart }} </td>
-                        <td> <a href="{% url 'nouvelle_reservation_trajet' trajet.id %}" class="btn btn-primary">Réserver</a> </td>
+                        <td> <a href="{% url 'nouvelle_reservation_trajet' trajet.id %}" class="btn btn-primary">Réserver ce train</a> </td>
                     </tr>
                 {% endfor %}
+                <td> <a href="{% url 'nouvelle_reservation_itineraire' itineraire %}" class="btn btn-primary">Réserver l'itinéraire</a> </td>
             </tbody>
         </table>
     {% else %}

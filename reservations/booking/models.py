@@ -8,6 +8,7 @@ from django.contrib.auth.models import User
 from geoposition.fields import GeopositionField
 import math
 import numpy as np
+from django.contrib import admin
 
 class Client(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -88,7 +89,10 @@ class Trajet(models.Model):
     
     def nb_passagers(self):
         return len(Reservation.objects.filter(trajet=self))
-        
+    
+
+
+    
     def __str__(self):
         ## La méthode strftime est utilisée pour convertir un objet datetime en une chaîne de caractères formatée.
         local_date_depart = timezone.localtime(self.date_depart)

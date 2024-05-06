@@ -13,12 +13,27 @@ class TrajetAdmin(admin.ModelAdmin):
     list_display = ('__str__','date_depart', 'date_arrivee', 'reservations_par_jour_moy', 'nb_passagers')
     list_filter = ('gare_depart', 'gare_arrivee')
     search_fields = ('gare_depart', 'gare_arrivee')
+
+    readonly_fields = ('liste_passagers',)
+    @admin.display(description="liste des passagers")
+    def liste_passagers(self, obj):
+            resas = Reservation.objects.filter(trajet=obj)
+            passas = ""
+            for resa in resas:
+                passas = passas + str(resa.passager) + '\n'
+            return passas
     fieldsets = (
         (None, { 'fields': ['gare_depart', 'gare_arrivee']}),
-        ("Date information", {'fields': ['date_depart','date_arrivee']}),
-        
+        ("Date information", {'fields': ['date_depart','date_arrivee']}), 
+        ("Liste des Passagers", {'fields' : ['liste_passagers']})
+     
     )
     
+    
+
+
+    
+
 class GareAdmin(admin.ModelAdmin):
     list_filter = ('ville',)
     search_fields = ('nom', 'ville')

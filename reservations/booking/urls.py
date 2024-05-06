@@ -1,6 +1,8 @@
-from django.urls import path,include
-
+from django.urls import path,include, register_converter
+from .converters import DateConverter
 from . import views
+
+register_converter(DateConverter, 'date')
 
 urlpatterns = [
     ##menu
@@ -20,5 +22,6 @@ urlpatterns = [
     path("nouvelle_reservation/<int:trajet_id>/", views.edit_reservation, name="nouvelle_reservation_trajet"),
     path("modifier_reservation/<int:reservation_id>/", views.edit_reservation, name="modifier_reservation"),
     path("supprimer_reservation/<int:reservation_id>/", views.delete_reservation, name="supprimer_reservation"),
-    path("chart/jour-trajet", views.chart_reservations_par_trajet_par_jour, name='chart-jour-trajet'),
+    path("chart/jour-trajet/<date:date>", views.chart_reservations_par_trajet_par_jour, name='chart-jour-trajet'),
+    path("chart/remplissage/<int:id>", views.chart_remplissage, name='chart-jour-trajet'),
 ]

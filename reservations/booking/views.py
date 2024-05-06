@@ -164,7 +164,7 @@ def delete_reservation(request, reservation_id):
 # def column_chart_view(request, chart_info):
 #     return render(request, 'booking/chart.html', {'chart_info': chart_info})
 
-def chart_reservations_par_trajet_par_jour(request):
+def chart_reservations_par_trajet_par_jour(request, date):
     chart_info = {
         'type': 'column',
         'title': "Sample Title",
@@ -189,3 +189,15 @@ def chart_reservations_par_trajet_par_jour(request):
         
         
     return render(request, 'booking/chart.html', {'chart_info': chart_info})
+def chart_remplissage(request, id):
+    trajet = Trajet.objects.get(pk=id)
+    toPlot = trajet.nb_reservations_chaque_jour()
+    chart_info = {
+        'type': 'line',
+        'title': "Taux de remplissage du trajet " + str(trajet),
+        'x_label': "Date",
+        'y_axis_label': "Taux de remplissage",
+        'data': toPlot
+    }
+    template = "/booking/chart"
+    return render(request, template, {"chart_info":chart_info})

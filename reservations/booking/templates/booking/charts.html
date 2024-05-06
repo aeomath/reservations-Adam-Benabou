@@ -17,7 +17,7 @@
         document.addEventListener('DOMContentLoaded', function () {
             Highcharts.chart('container', {
                 chart: {
-                    type: 'column'
+                    type: '{{ chart_info.type }}'
                 },
 
                 title: {
@@ -31,18 +31,20 @@
                 },
 
                 xAxis: {
-                    categories: {{ chart_info.categories }},
-                    crosshair: true,
-                    accessibility: {
-                        description: 'Countries'
+                    {% if chart_info.categories %}
+                    categories: {{ chart_info.categories|safe }},
+                    {% else %}
+                    labels: {
+                        enabled: false
                     }
+                    {% endif %}
                 },
 
                 series: [
                 {% for trajet in chart_info.data %}
                     {
                         name: '{{ trajet.0 }}',
-                        data: {{ trajet.1 }}
+                        data: [{{ trajet.1 }}]
                     },
                 {% endfor %}
                     
@@ -50,5 +52,7 @@
             });
         });
     </script>
+
+    
 
 {% endblock %}

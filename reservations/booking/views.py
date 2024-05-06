@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.shortcuts import get_list_or_404, get_object_or_404, render, redirect
 from django.http import HttpResponse
 from .models import Trajet,Reservation,Passager
@@ -5,9 +7,7 @@ from booking.form import SearchForm , ReservationForm, Register_Client,PassagerF
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib.auth import login
-from django.utils import timezone
-
-import json
+from django.utils import timezone, dateformat
 
     
 def menu(request):
@@ -164,28 +164,20 @@ def delete_reservation(request, reservation_id):
 # def column_chart_view(request, chart_info):
 #     return render(request, 'booking/chart.html', {'chart_info': chart_info})
 
-def chart_reservations_par_trajet_par_jour(request):
+def chart_reservations_par_jour(request, timestamp):
+    res_date = timezone.make_aware(datetime.fromtimestamp(timestamp)).date()
+    trajets = get_list_or_404(Trajet)
+    data = []
+    
     chart_info = {
         'type': 'column',
-        'title': "Sample Title",
-        'y_axis_label' : "Nombre de réservations",
-        'data' : [
-            ['Corn', [406292, 260000, 107000, 68300, 27500, 14500]],
-            ['Wheat', [51086, 136000, 5500, 141000, 107180, 77000]]
-        ]
+        'title': dateformat.format(res_date, "l, d M Y").lower().capitalize(),
+        'y_axis_label' : "Nombre de réservations"
     }
-    
-    trajets = get_list_or_404(Trajet)
-    
-    dictio = {"trajet_name": []} ## {date: [nb_res_par_trajet]}
-    
     for trajet in trajets:
-        res_by_day = Trajet.nb_reservations_par_jour(trajet)
-        dictio.update({key: dictio[key].append[res_by_day[key]] if key in res_by_day else dictio[key] for key in dictio})
-        dictio.update({key: res_by_day[key] for key in res_by_day if key not in dictio})
+        data.append([f"{trajet.gare_depart} => {trajet.gare_arrivee}", Trajet.nb_reservations_par_jour(trajet, res_date)])
         
+    #chart_info['categories'] = [date.strftime("%d/%m/%Y")]
+    chart_info['data'] = data
         
-    chart_info['categories'] = dictio.keys()
-        
-        
-    return render(request, 'booking/chart.html', {'chart_info': chart_info})
+    return render(request, 'booking/charts.html', {'chart_info': chart_info})

@@ -89,14 +89,11 @@ class Trajet(models.Model):
 
         return distance
     
-<<<<<<< HEAD
 
-    def nb_reservations_par_jour(self):
-=======
     ## Renvoie un dictionnaire dont les clefs sont un tuple (date, nom_du_trajet_sur_lequel_on_appelle_la_méthode) 
     # et la valeur une liste singleton contenant le nbre de reservations de ce trajet au cours du jour "date"
     def nb_reservations_chaque_jour(self):
->>>>>>> graphs
+
         reservations = Reservation.objects.filter(trajet=self).order_by('date_reservation')
         
         res_by_day = []

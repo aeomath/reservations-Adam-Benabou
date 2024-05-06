@@ -257,7 +257,7 @@ def itineraire(request):
             itinerary_list = get_list_or_404(Trajet)
     else:
         itinerary_list = get_list_or_404(Trajet)
-        form = SearchForm()
+        form = ItineraryForm()
     context = {
         'form': form,
         'itineraire': itinerary_list,

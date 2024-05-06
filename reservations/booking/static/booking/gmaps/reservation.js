@@ -52,11 +52,11 @@ async function calculateAndDisplayRoute(start, end, departureTime) {
     var request = {
         origin: start,
         destination: end,
-        travelMode: 'TRANSIT',// Mode : transport en commun (il existe aussi 'DRIVING')
-        transitOptions: {
-            modes: ['TRAIN'], // Moyen de transport : train
-            departureTime: departureTime
-        },
+        travelMode: 'DRIVING', // Mode : transport en commun (il existe aussi 'DRIVING')
+        // transitOptions: {
+        //     // modes: ['TRAIN'], // Moyen de transport : train
+        //     departureTime: departureTime
+        // },
         region: 'fr',
         language: 'fr'
 

@@ -7,6 +7,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import login
 from django.utils import timezone
 from django.urls import reverse
+from django.forms import formset_factory
 
 import networkx as nx
 import math
@@ -156,17 +157,16 @@ def itineraire(request):
             source = form.cleaned_data['gare_depart']
             target = form.cleaned_data['gare_arrivee']
             start_datetime = form.cleaned_data['date_de_depart']   
+            
             itinerary_list = compute_itinerary(source, target, start_datetime)
         else:
             itinerary_list = get_list_or_404(Trajet)
     else:
         itinerary_list = get_list_or_404(Trajet)
         form = SearchForm()
-    id_list = [trajet.id for trajet in itinerary_list]
     context = {
         'form': form,
         'itineraire': itinerary_list,
-        'id_list': id_list
     }
     return render(request, template, context)
        

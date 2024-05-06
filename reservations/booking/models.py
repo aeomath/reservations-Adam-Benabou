@@ -106,6 +106,9 @@ class Trajet(models.Model):
     
     def reservations_par_jour_moy(self):
         reservations = Reservation.objects.filter(trajet=self).order_by('date_reservation')
+        if len(reservations) == 0:
+            return 0
+        
         avg = len(reservations)/((reservations[len(reservations)-1].date_reservation.date()-reservations[0].date_reservation.date()).days+1)
                 
         return avg

@@ -238,15 +238,18 @@ def profil(request):
 
 @login_required()
 def itineraire(request):
+    # define the view that allows the user to search an itinerary
     template = "booking/itinerary.html"
     
     if request.method == 'POST':
         form = ItineraryForm(request.POST)
         if form.is_valid():
+            # Fill the origin, target, and date of departure
             source = form.cleaned_data['gare_depart']
             target = form.cleaned_data['gare_arrivee']
             start_datetime = form.cleaned_data['date_de_depart']   
             
+            # Time for some math-gick
             itinerary_list = compute_itinerary(source, target, start_datetime)
         else:
             itinerary_list = get_list_or_404(Trajet)
@@ -261,27 +264,31 @@ def itineraire(request):
        
 
 
-def compute_itinerary(source, target, start_datetime):    
+def compute_itinerary(source, target, start_datetime): 
     #Create Graph
     graph = create_graph(start_datetime)
-    #Compute te shortest path from A to B
+    #Compute the shortest path from A to B using the bellman-ford method
     shortest_path = nx.bellman_ford_path(graph, source, target, weight='weight')
-    #Create the itinerary
+    #Create the itinerary, an array of "trajet"
     itinerary = []
     for i in range(len(shortest_path)-1):
         itinerary.append(get_object_or_404(Trajet, gare_depart = shortest_path[i], gare_arrivee = shortest_path[i+1]))
     return itinerary
     
 def create_graph(start_datetime):
+    # First create an empty graph
     G = nx.Graph()
+    # Get every "trajet" possible
     trajet_liste = get_list_or_404(Trajet)
     for trajet in trajet_liste:
+        # Add the trajet to the graph !ONLY! if it happens after the departure date
         if trajet.date_depart >= start_datetime:
             list_edge = compute_edge(trajet)
             G.add_edge(list_edge[0],list_edge[1], weight=list_edge[2])
     return G
 
 def compute_edge(trajet):
+    # Defines the weighted edge thanks to trigonometry
     A = trajet.gare_depart
     B = trajet.gare_arrivee
     return [trajet.gare_depart, trajet.gare_arrivee, calculate_distance(A.position.latitude ,A.position.longitude,
@@ -307,29 +314,3 @@ def calculate_distance(lat1, lon1, lat2, lon2):
         distance = R * c
 
         return distance
-    
-def nouvel_itineraire(request, trajet_id):
-    
-    if request.method == 'POST':
-        form = ReservationForm(data = request.POST,client = request.user.client)
-        if form.is_valid():
-            reservation = form.save(commit=False)
-            ## Si on choisit un trajet à reserver , et donc si un trajet est en paramètre, on l'ajoute à la réservation
-            if trajet_id:
-                reservation.trajet = get_object_or_404(Trajet, pk=trajet_id)
-            reservation.client = request.user.client
-            reservation.date_reservation = timezone.now()   
-            reservation.save()
-            form.save_m2m()
-            return redirect('reservation',reservation_id=reservation.pk)
-    else:
-        if trajet_id:
-            trajet = get_object_or_404(Trajet, pk=trajet_id)
-            reservation=Reservation(trajet=trajet)
-            form = ReservationForm(instance=reservation,client = request.user.client)
-        ## Si on ne choisit pas de trajet à reserver , on crée une réservation vide
-        else:
-            form = ReservationForm(client = request.user.client)
-            
-    template = "booking/reservation_itineraire.html"
-    return render(request, template, {'form': form})

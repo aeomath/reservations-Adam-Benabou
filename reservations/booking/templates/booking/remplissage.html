@@ -1,5 +1,5 @@
 {%extends "booking/menu_auth.html"%}
-{%block title%}charts{%endblock%}
+{%block title%}Taux de Remplissage{%endblock%}
 {%block en_tete%}
 
 {% load bootstrap5%}
@@ -17,21 +17,19 @@
         var chart= new CanvasJS.Chart("chartContainer", {
           theme: "light2",
           title: {
-            text: "Taux de remplissage au cours du temps"
+            text: '{{ chart_info.title }}',
           },
           axisY: {
             title: "Remplissage (%)",
-            stripLines: [{
-              value: 5,
-              label: "Goal"
-            }]
+
+
           },
           axisX: {
             title: "Date (AAAA-MM-JJ)"
           },
           data: [{
             type: "line",
-            yValueFormatString: "# %",
+            yValueFormatString: "##.##%",
             dataPoints: {{ chart_info.data|safe }}
           }]
         });
@@ -42,7 +40,7 @@
 <body>
     <div id="chartContainer" style="width: 100%; height: 360px;"></div>
     <script src="https://cdn.canvasjs.com/ga/canvasjs.min.js"></script>
-    <p>{{chart_info.data}}</p>
+    
 </body>
 </html>                              
 {% endblock %}

@@ -191,7 +191,16 @@ def chart_reservations_par_jour(request, timestamp):
 
 def chart_remplissage(request, id):
     trajet = Trajet.objects.get(pk=id)
-    toPlot = trajet.nb_reservations_chaque_jour()
+    resasParJour = trajet.nb_reservations_chaque_jour()
+    toPlot = []
+    started = False
+    for key in resasParJour.keys():
+        if not started:
+            toPlot.append({'label':str(key[0]), 'y':resasParJour[key][0]/trajet.max_passagers*100})
+        else:
+            toPlot.append({'label':str(key[0]), 'y':resasParJour[key][0]/trajet.max_passagers*100 + toPlot[len(toPlot)-1]['y']})
+        started = True
+        
     chart_info = {
         'type': 'line',
         'title': "Taux de remplissage du trajet " + str(trajet),
@@ -199,7 +208,7 @@ def chart_remplissage(request, id):
         'y_axis_label': "Taux de remplissage",
         'data': toPlot
     }
-    template = "booking/chart.html"
+    template = "booking/remplissage.html"
     return render(request, template, {"chart_info":chart_info})
 
 def menu(request):

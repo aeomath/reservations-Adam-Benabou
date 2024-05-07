@@ -95,12 +95,12 @@ class Trajet(models.Model):
 
         reservations = Reservation.objects.filter(trajet=self).order_by('date_reservation')
         
-        res_by_day = []
+        res_by_day = {}
         for res in reservations:
             ## res_by_day = {(date,nom_trajet): [nb_res]}
             res_date = res.date_reservation.date()
             key = (res_date, f"{self.gare_depart}=>{self.gare_arrivee}")
-            if not(res_date in res_by_day.keys()[0]):
+            if not(res_date in list(res_by_day.keys())):
                 res_by_day[key] = [1]
             else:
                 res_by_day[key][0] += 1

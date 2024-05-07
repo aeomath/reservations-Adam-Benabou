@@ -7,7 +7,6 @@ from django.utils import timezone
 from django.contrib.auth.models import User
 from geoposition.fields import GeopositionField
 import math
-import numpy as np
 from django.contrib import admin
 
 class Client(models.Model):
@@ -90,7 +89,10 @@ class Trajet(models.Model):
         return distance
     
 
-    def nb_reservations_par_jour(self):
+    ## Renvoie un dictionnaire dont les clefs sont un tuple (date, nom_du_trajet_sur_lequel_on_appelle_la_méthode) 
+    # et la valeur une liste singleton contenant le nbre de reservations de ce trajet au cours du jour "date"
+    def nb_reservations_chaque_jour(self):
+
         reservations = Reservation.objects.filter(trajet=self).order_by('date_reservation')
         
         res_by_day = []
@@ -103,6 +105,11 @@ class Trajet(models.Model):
             else:
                 res_by_day[key][0] += 1
         return res_by_day
+    
+    ## Retourne le nombre de reservations du trajet (self) faites le jour "date"
+    def nb_reservations_par_jour(self, date):
+        return Reservation.objects.filter(trajet=self, date_reservation__date=date).count()
+
     
     def reservations_par_jour_moy(self):
         reservations = Reservation.objects.filter(trajet=self).order_by('date_reservation')
@@ -135,9 +142,6 @@ class Reservation(models.Model):
     client = models.ForeignKey(Client, on_delete=models.CASCADE)
     trajet = models.ForeignKey(Trajet, on_delete=models.CASCADE)
 
-    
-    
-    
     ## rajout de la contrainte d'unicité pour la place par trajet (code trouvé sur le net)
     class Meta:
         constraints = [
@@ -146,8 +150,7 @@ class Reservation(models.Model):
     def __str__(self):
         return str(self.trajet)
 
-        
-
+    
 
 
 

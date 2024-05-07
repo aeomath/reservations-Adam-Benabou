@@ -1,0 +1,49 @@
+{% extends "booking/menu_auth.html" %}
+{% block en_tete%} {% endblock %}
+
+{% load bootstrap5%}
+
+{# Load the tag library #}
+{% load bootstrap5%}
+
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
+{# Display django.contrib.messages as Bootstrap alerts #}
+{% bootstrap_messages %}
+
+{% block content %}
+    <h1>Définir un itinéraire</h1>
+    {% if itineraire %}
+        
+        <form action="{% url 'itineraire' %}" method="post" class="dropdown">
+            {% csrf_token %}
+            {% bootstrap_form form %}
+            {% buttons %}
+            <button type="submit" class="btn btn-primary">Rechercher</button>
+            {% endbuttons %}
+        </form>
+        <table class = "table">
+            <thead>
+                <tr>
+                    <th> gare de depart </th>
+                    <th> gare d'arrivée </th>
+                    <th> Date départ </th>
+
+                </tr>
+            </thead>
+            <tbody>
+                {% for trajet in itineraire %}
+                    <tr>
+                        <td> {{ trajet.gare_depart }} </td>
+                        <td> {{ trajet.gare_arrivee }} </td>
+                        <td> {{ trajet.date_depart }} </td>
+                        <td> <a href="{% url 'nouvelle_reservation_trajet' trajet.id %}" class="btn btn-primary">Réserver ce train</a> </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+    {% bootstrap_alert "Pas de trajets disponible" alert_type='warning' %}
+    {% endif %}
+{% endblock %}

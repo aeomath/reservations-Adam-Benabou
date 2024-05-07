@@ -14,6 +14,7 @@
 <!-- tableau reservation-->
 <div>
 <a href="{% url 'reservations' %}" class="btn btn-secondary">Retour à mes reservations</a>
+<a href="{% url 'itineraire' %}" class="btn btn-secondary">Retour aux réservations d'itinéraire</a>
     {% if reservation %}
         <br> </br>
         <h2>{{reservation}}</h2>
@@ -36,6 +37,8 @@
             <tr>
                 <td> <a href="{% url 'modifier_reservation' reservation.numero_reservation %}" class="btn btn-primary btn-lg btn-block">Modifier</a></td>
                 <td> <a href="{% url 'supprimer_reservation' reservation.numero_reservation %}" class="btn btn-danger btn-lg btn-block">Supprimer</a></td>
+                <td> <a href="{% url 'chart_reservations_par_jour' timestamp %}" class="btn btn-primary">Stats</a></td>
+
             </tr>
         </table>
     {% else %}

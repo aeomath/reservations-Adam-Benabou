@@ -1,13 +1,16 @@
+from datetime import datetime
+
 from django.shortcuts import get_list_or_404, get_object_or_404, render, redirect
 from django.http import HttpResponse
 from .models import Trajet,Reservation,Passager
-from booking.form import SearchForm , ReservationForm, Register_Client,PassagerForm
+from booking.form import SearchForm , ReservationForm, Register_Client,PassagerForm, ItineraryForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib.auth import login
-from django.utils import timezone
 
-import json
+from django.utils import timezone, dateformat
+from .models import Trajet
+
 
     
 def menu(request):
@@ -18,6 +21,8 @@ def menu(request):
         return render(request, 'booking/menu_auth.html', context)
     return render(request, 'booking/menu_pas_auth.html')
 
+import networkx as nx
+import math
 
 
 
@@ -100,11 +105,13 @@ def reservation(request, reservation_id):
         return HttpResponse("Petit malin , vous avez essayé d'accéder à une réservation qui ne vous appartient pas !")
     template = "booking/reservation.html"
     depart_time = reservation.trajet.date_depart.isoformat()
+    timestamp = int(reservation.date_reservation.timestamp())
     context ={'reservation': reservation, 
               'trajet': reservation.trajet , 
               'gare_depart': reservation.trajet.gare_depart, 
               'gare_arrivee': reservation.trajet.gare_arrivee , 
-              'depart_time': depart_time} 
+              'depart_time': depart_time,
+              'timestamp': timestamp} 
     return render(request, template, context=context)
 
 @login_required()
@@ -161,31 +168,151 @@ def delete_reservation(request, reservation_id):
     template = "booking/delete_reservation.html"
     return render(request, template, {'reservation': reservation})
 
-# def column_chart_view(request, chart_info):
-#     return render(request, 'booking/chart.html', {'chart_info': chart_info})
 
-def chart_reservations_par_trajet_par_jour(request):
-    chart_info = {
-        'type': 'column',
-        'title': "Sample Title",
-        'y_axis_label' : "Nombre de réservations",
-        'data' : [
-            ['Corn', [406292, 260000, 107000, 68300, 27500, 14500]],
-            ['Wheat', [51086, 136000, 5500, 141000, 107180, 77000]]
-        ]
-    }
-    
+
+def chart_reservations_par_jour(request, timestamp):
+    res_date = timezone.make_aware(datetime.fromtimestamp(timestamp)).date()
     trajets = get_list_or_404(Trajet)
+    data = []
     
-    dictio = {"trajet_name": []} ## {date: [nb_res_par_trajet]}
-    
+    chart_info = {
+        'timestamp': timestamp,
+        'type': 'column',
+        'title': dateformat.format(res_date, "l, d M Y").lower().capitalize(),
+        'y_axis_label' : "Nombre de réservations"
+    }
     for trajet in trajets:
-        res_by_day = Trajet.nb_reservations_par_jour(trajet)
-        dictio.update({key: dictio[key].append[res_by_day[key]] if key in res_by_day else dictio[key] for key in dictio})
-        dictio.update({key: res_by_day[key] for key in res_by_day if key not in dictio})
+        data.append([f"{trajet.gare_depart} => {trajet.gare_arrivee}", Trajet.nb_reservations_par_jour(trajet, res_date)])
         
+    #chart_info['categories'] = [res_date.strftime("%d/%m/%Y")]
+    chart_info['data'] = data
         
-    chart_info['categories'] = dictio.keys()
-        
-        
-    return render(request, 'booking/chart.html', {'chart_info': chart_info})
+    return render(request, 'booking/charts.html', {'chart_info': chart_info})
+
+def chart_remplissage(request, id):
+    trajet = Trajet.objects.get(pk=id)
+    toPlot = trajet.nb_reservations_chaque_jour()
+    chart_info = {
+        'type': 'line',
+        'title': "Taux de remplissage du trajet " + str(trajet),
+        'x_label': "Date",
+        'y_axis_label': "Taux de remplissage",
+        'data': toPlot
+    }
+    template = "booking/chart.html"
+    return render(request, template, {"chart_info":chart_info})
+
+def menu(request):
+    if request.user.is_authenticated:
+        context = {
+            'user': request.user,
+        }
+        return render(request, 'booking/menu_auth.html', context)
+    return render(request, 'booking/menu_pas_auth.html')
+
+def register(request):
+    if request.method == 'POST':
+        form = Register_Client(request.POST)
+        if form.is_valid():
+            client = form.save(commit=False)
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
+            prenom = form.cleaned_data['prenom']
+            nom = form.cleaned_data['nom']
+            new_user = User.objects.create_user(username=username, password=password, first_name=prenom, last_name=nom)
+            client.user = new_user
+            client.save()
+            login(request, new_user)
+            return redirect('menu')
+    else:
+        form = Register_Client()
+    return render(request, 'registration/register.html', {'form': form})
+
+@login_required()
+def profil(request):
+    template = "booking/profil.html"
+    return render(request, template)
+
+
+
+
+
+
+@login_required()
+def itineraire(request):
+    # define the view that allows the user to search an itinerary
+    template = "booking/itinerary.html"
+    
+    if request.method == 'POST':
+        form = ItineraryForm(request.POST)
+        if form.is_valid():
+            # Fill the origin, target, and date of departure
+            source = form.cleaned_data['gare_depart']
+            target = form.cleaned_data['gare_arrivee']
+            start_datetime = form.cleaned_data['date_de_depart']   
+            
+            # Time for some math-gick
+            itinerary_list = compute_itinerary(source, target, start_datetime)
+        else:
+            itinerary_list = get_list_or_404(Trajet)
+    else:
+        itinerary_list = get_list_or_404(Trajet)
+        form = ItineraryForm()
+    context = {
+        'form': form,
+        'itineraire': itinerary_list,
+    }
+    return render(request, template, context)
+       
+
+
+def compute_itinerary(source, target, start_datetime): 
+    #Create Graph
+    graph = create_graph(start_datetime)
+    #Compute the shortest path from A to B using the bellman-ford method
+    shortest_path = nx.bellman_ford_path(graph, source, target, weight='weight')
+    #Create the itinerary, an array of "trajet"
+    itinerary = []
+    for i in range(len(shortest_path)-1):
+        itinerary.append(get_object_or_404(Trajet, gare_depart = shortest_path[i], gare_arrivee = shortest_path[i+1]))
+    return itinerary
+    
+def create_graph(start_datetime):
+    # First create an empty graph
+    G = nx.Graph()
+    # Get every "trajet" possible
+    trajet_liste = get_list_or_404(Trajet)
+    for trajet in trajet_liste:
+        # Add the trajet to the graph !ONLY! if it happens after the departure date
+        if trajet.date_depart >= start_datetime:
+            list_edge = compute_edge(trajet)
+            G.add_edge(list_edge[0],list_edge[1], weight=list_edge[2])
+    return G
+
+def compute_edge(trajet):
+    # Defines the weighted edge thanks to trigonometry
+    A = trajet.gare_depart
+    B = trajet.gare_arrivee
+    return [trajet.gare_depart, trajet.gare_arrivee, calculate_distance(A.position.latitude ,A.position.longitude,
+                                                                        B.position.latitude, B.position.longitude)]
+    
+    
+def calculate_distance(lat1, lon1, lat2, lon2):
+        # Conversion des degrés en radians
+        lat1, lon1, lat2, lon2 = map(math.radians, [lat1, lon1, lat2, lon2])
+
+        # Rayon de la terre en kilomètres
+        R = 6371.0
+
+        # Différences
+        dlon = lon2 - lon1
+        dlat = lat2 - lat1
+
+        # Formule de Haversine
+        a = math.sin(dlat / 2)**2 + math.cos(lat1) * math.cos(lat2) * math.sin(dlon / 2)**2
+        c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
+
+        # Distance
+        distance = R * c
+
+        return distance

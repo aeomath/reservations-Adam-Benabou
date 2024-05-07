@@ -105,11 +105,13 @@ def reservation(request, reservation_id):
         return HttpResponse("Petit malin , vous avez essayé d'accéder à une réservation qui ne vous appartient pas !")
     template = "booking/reservation.html"
     depart_time = reservation.trajet.date_depart.isoformat()
+    timestamp = int(reservation.date_reservation.timestamp())
     context ={'reservation': reservation, 
               'trajet': reservation.trajet , 
               'gare_depart': reservation.trajet.gare_depart, 
               'gare_arrivee': reservation.trajet.gare_arrivee , 
-              'depart_time': depart_time} 
+              'depart_time': depart_time,
+              'timestamp': timestamp} 
     return render(request, template, context=context)
 
 @login_required()
@@ -197,7 +199,7 @@ def chart_remplissage(request, id):
         'y_axis_label': "Taux de remplissage",
         'data': toPlot
     }
-    template = "/booking/chart"
+    template = "booking/chart.html"
     return render(request, template, {"chart_info":chart_info})
 
 def menu(request):
